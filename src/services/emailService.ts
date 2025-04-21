@@ -171,3 +171,59 @@ export async function sendVerificationEmail(
     branding?.emailFromName
   );
 }
+
+/**
+ * Sends an invitation email
+ *
+ * @param to - Recipient email address
+ * @param inviterName - Name of the person sending the invitation
+ * @param workspaceName - Name of the workspace
+ * @param token - Invitation token
+ * @param message - Optional personal message
+ * @param branding - Optional organization branding
+ * @returns Promise resolving to the send result
+ */
+export async function sendInvitationEmail(
+  to: string,
+  inviterName: string,
+  workspaceName: string,
+  token: string,
+  message?: string,
+  branding?: OrganizationBranding
+): Promise<any> {
+  // Import appUrl directly to ensure we get the correct value
+  const { appUrl } = require("../config/environment");
+
+  const invitationUrl = `${appUrl}/invitations/accept?token=${token}`;
+
+  console.log("Creating invitation email with URL:", invitationUrl);
+
+  // Default colors
+  const primaryColor = branding?.primaryColor || "#10b981"; // Default emerald
+  const secondaryColor = branding?.secondaryColor || "#18181b"; // Default dark zinc
+  const organizationName = branding?.name || "MinSlack";
+
+  // Compile the email template with invitation data and branding
+  const html = compileTemplate("invitation", {
+    inviterName,
+    workspaceName,
+    invitationUrl,
+    message,
+    year: new Date().getFullYear(),
+    privacyUrl: `${appUrl}/privacy`,
+    termsUrl: `${appUrl}/terms`,
+    // Add branding
+    logoUrl: branding?.logoUrl || "",
+    primaryColor,
+    secondaryColor,
+    organizationName,
+  });
+
+  // Send the email with optional custom from name
+  return sendEmail(
+    to,
+    `${inviterName} invited you to join ${workspaceName} on ${organizationName}`,
+    html,
+    branding?.emailFromName
+  );
+}

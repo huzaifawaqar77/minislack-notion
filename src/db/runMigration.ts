@@ -29,6 +29,7 @@ async function main() {
       "create_verification_tokens_table.sql",
       "create_organizations_table.sql",
       "create_additional_tables.sql",
+      "create_integration_tables.sql",
     ];
 
     // Run each migration

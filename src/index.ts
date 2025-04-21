@@ -15,6 +15,9 @@ import MessageRoutes from "./routes/messageRoutes";
 import FileRoutes from "./routes/fileRoutes";
 import SearchRoutes from "./routes/searchRoutes";
 import NotificationRoutes from "./routes/notificationRoutes";
+import InvitationRoutes from "./routes/invitationRoutes";
+import WebhookRoutes from "./routes/webhookRoutes";
+import AnalyticsRoutes from "./routes/analyticsRoutes";
 import { port } from "./config/environment";
 import { detectDomain } from "./middleware/domainMiddleware";
 import { initializeSocketIO } from "./services/socketService";
@@ -94,6 +97,15 @@ app.use("/", SearchRoutes);
 
 // 10. Notification Routes
 app.use("/", NotificationRoutes);
+
+// 11. Invitation Routes
+app.use("/", InvitationRoutes);
+
+// 12. Webhook Routes
+app.use("/", WebhookRoutes);
+
+// 13. Analytics Routes
+app.use("/", AnalyticsRoutes);
 
 async function testConnection() {
   try {
