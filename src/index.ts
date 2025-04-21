@@ -7,6 +7,9 @@ import AuthRoutes from "./routes/authRoutes";
 import SessionRoutes from "./routes/sessionRoutes";
 import VerificationRoutes from "./routes/verificationRoutes";
 import OrganizationRoutes from "./routes/organizationRoutes";
+import WorkspaceRoutes from "./routes/workspaceRoutes";
+import ChannelRoutes from "./routes/channelRoutes";
+import MessageRoutes from "./routes/messageRoutes";
 import { port } from "./config/environment";
 import { detectDomain } from "./middleware/domainMiddleware";
 
@@ -45,6 +48,15 @@ app.use("/auth", VerificationRoutes);
 
 // 4. Organization Routes
 app.use("/organizations", OrganizationRoutes);
+
+// 5. Workspace Routes
+app.use("/", WorkspaceRoutes);
+
+// 6. Channel Routes
+app.use("/", ChannelRoutes);
+
+// 7. Message Routes
+app.use("/", MessageRoutes);
 
 async function testConnection() {
   try {
