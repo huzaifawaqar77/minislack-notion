@@ -1,7 +1,9 @@
 import express from "express";
+import { createServer } from "http";
 import { db } from "./db/database";
 import { sql } from "kysely";
 import cors from "cors";
+import path from "path";
 
 import AuthRoutes from "./routes/authRoutes";
 import SessionRoutes from "./routes/sessionRoutes";
@@ -10,10 +12,27 @@ import OrganizationRoutes from "./routes/organizationRoutes";
 import WorkspaceRoutes from "./routes/workspaceRoutes";
 import ChannelRoutes from "./routes/channelRoutes";
 import MessageRoutes from "./routes/messageRoutes";
+import FileRoutes from "./routes/fileRoutes";
+import SearchRoutes from "./routes/searchRoutes";
+import NotificationRoutes from "./routes/notificationRoutes";
 import { port } from "./config/environment";
 import { detectDomain } from "./middleware/domainMiddleware";
+import { initializeSocketIO } from "./services/socketService";
 
 const app = express();
+const httpServer = createServer(app);
+
+// Initialize Socket.IO
+const io = initializeSocketIO(httpServer);
+
+// Make io available in the request object
+declare global {
+  namespace Express {
+    interface Request {
+      io?: any;
+    }
+  }
+}
 
 // middlewares
 
@@ -26,7 +45,13 @@ app.use(express.json());
 // 3. Domain detection middleware
 app.use(detectDomain);
 
-// 4. Request logging middleware
+// 4. Make io available in the request object
+app.use((req, _res, next) => {
+  req.io = io;
+  next();
+});
+
+// 5. Request logging middleware
 app.use((req, _res, next) => {
   // Log request details for debugging
   console.log(
@@ -34,6 +59,9 @@ app.use((req, _res, next) => {
   );
   next();
 });
+
+// 6. Serve static files from uploads directory
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // Routes
 
@@ -58,6 +86,15 @@ app.use("/", ChannelRoutes);
 // 7. Message Routes
 app.use("/", MessageRoutes);
 
+// 8. File Routes
+app.use("/", FileRoutes);
+
+// 9. Search Routes
+app.use("/", SearchRoutes);
+
+// 10. Notification Routes
+app.use("/", NotificationRoutes);
+
 async function testConnection() {
   try {
     // Execute a simple query to test the connection
@@ -69,9 +106,11 @@ async function testConnection() {
   }
 }
 
-app.listen(port, () => {
-  console.log("🖥  Application started on port 3000");
-});
-
 // Test the connection when the application starts
 testConnection();
+
+// Start the HTTP server (which also starts the WebSocket server)
+httpServer.listen(port, () => {
+  console.log(`🖥  Application started on port ${port}`);
+  console.log(`🔌 WebSocket server initialized`);
+});

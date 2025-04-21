@@ -28,6 +28,7 @@ async function main() {
     const migrations = [
       "create_verification_tokens_table.sql",
       "create_organizations_table.sql",
+      "create_additional_tables.sql",
     ];
 
     // Run each migration
