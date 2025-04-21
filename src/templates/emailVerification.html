@@ -1,165 +1,182 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Verify Your Email</title>
     <style>
-        /* Base styles */
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: #18181b; /* Dark zinc */
-            background-color: #f8fafc;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .email-wrapper {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-        }
-        
-        .email-header {
-            background-color: #10b981; /* Emerald */
-            padding: 24px;
-            text-align: center;
-        }
-        
-        .email-header h1 {
-            color: #ffffff;
-            margin: 0;
-            font-size: 24px;
-            font-weight: 700;
-        }
-        
-        .email-body {
-            padding: 32px 24px;
-            color: #27272a; /* Zinc 800 */
-        }
-        
-        .email-body p {
-            margin-bottom: 16px;
-            font-size: 16px;
-        }
-        
-        .button-container {
-            text-align: center;
-            margin: 32px 0;
-        }
-        
-        .button {
-            display: inline-block;
-            background-color: #10b981; /* Emerald */
-            color: #ffffff !important;
-            text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 16px;
-            transition: background-color 0.2s;
-        }
-        
-        .button:hover {
-            background-color: #059669; /* Darker emerald */
-        }
-        
-        .verification-code {
-            background-color: #f4f4f5; /* Zinc 100 */
-            border-radius: 6px;
-            padding: 16px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: #18181b; /* Zinc 900 */
-            margin: 24px 0;
-        }
-        
-        .email-footer {
-            background-color: #18181b; /* Dark zinc */
-            color: #a1a1aa; /* Zinc 400 */
-            padding: 24px;
-            text-align: center;
-            font-size: 14px;
-        }
-        
-        .email-footer p {
-            margin: 8px 0;
-        }
-        
-        .email-footer a {
-            color: #d4d4d8; /* Zinc 300 */
-            text-decoration: none;
-        }
-        
-        .help-text {
-            font-size: 14px;
-            color: #71717a; /* Zinc 500 */
-            margin-top: 24px;
-            text-align: center;
-        }
-        
-        .logo {
-            max-width: 120px;
-            margin-bottom: 16px;
-        }
-        
-        @media only screen and (max-width: 600px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .email-header, .email-body, .email-footer {
-                padding: 16px;
-            }
-        }
+      /* Base styles */
+      body {
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+          line-height: 1.6;
+          color: #18181b; /* Dark zinc */
+          background-color: #f8fafc;
+          margin: 0;
+          padding: 0;
+      }
+
+      .container {
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 20px;
+      }
+
+      .email-wrapper {
+          background-color: #ffffff;
+          border-radius: 8px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+          overflow: hidden;
+      }
+
+      .email-header {
+          background-color: {{primaryColor}}; /* Emerald by default */
+          padding: 24px;
+          text-align: center;
+      }
+
+      .email-header h1 {
+          color: #ffffff;
+          margin: 0;
+          font-size: 24px;
+          font-weight: 700;
+      }
+
+      .email-body {
+          padding: 32px 24px;
+          color: #27272a; /* Zinc 800 */
+      }
+
+      .email-body p {
+          margin-bottom: 16px;
+          font-size: 16px;
+      }
+
+      .button-container {
+          text-align: center;
+          margin: 32px 0;
+      }
+
+      .button {
+          display: inline-block;
+          background-color: {{primaryColor}}; /* Emerald by default */
+          color: #ffffff !important;
+          text-decoration: none;
+          padding: 12px 24px;
+          border-radius: 6px;
+          font-weight: 600;
+          font-size: 16px;
+          transition: background-color 0.2s;
+      }
+
+      .button:hover {
+          background-color: #059669; /* Darker emerald */
+      }
+
+      .verification-code {
+          background-color: #f4f4f5; /* Zinc 100 */
+          border-radius: 6px;
+          padding: 16px;
+          text-align: center;
+          font-size: 24px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          color: #18181b; /* Zinc 900 */
+          margin: 24px 0;
+      }
+
+      .email-footer {
+          background-color: {{secondaryColor}}; /* Dark zinc by default */
+          color: #a1a1aa; /* Zinc 400 */
+          padding: 24px;
+          text-align: center;
+          font-size: 14px;
+      }
+
+      .email-footer p {
+          margin: 8px 0;
+      }
+
+      .email-footer a {
+          color: #d4d4d8; /* Zinc 300 */
+          text-decoration: none;
+      }
+
+      .help-text {
+          font-size: 14px;
+          color: #71717a; /* Zinc 500 */
+          margin-top: 24px;
+          text-align: center;
+      }
+
+      .logo {
+          max-width: 120px;
+          margin-bottom: 16px;
+      }
+
+      @media only screen and (max-width: 600px) {
+          .container {
+              padding: 10px;
+          }
+
+          .email-header, .email-body, .email-footer {
+              padding: 16px;
+          }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="email-wrapper">
-            <div class="email-header">
-                <h1>Verify Your Email Address</h1>
-            </div>
-            <div class="email-body">
-                <p>Hi {{name}},</p>
-                
-                <p>Thanks for signing up for MinSlack! We're excited to have you on board. Please verify your email address to get started.</p>
-                
-                <div class="button-container">
-                    <a href="{{verificationUrl}}" class="button">Verify Email Address</a>
-                </div>
-                
-                <p>Or use this verification code:</p>
-                
-                <div class="verification-code">
-                    {{verificationCode}}
-                </div>
-                
-                <p>If you didn't create an account with us, you can safely ignore this email.</p>
-                
-                <div class="help-text">
-                    <p>If you're having trouble clicking the button, copy and paste the URL below into your web browser:</p>
-                    <p>{{verificationUrl}}</p>
-                </div>
-            </div>
-            <div class="email-footer">
-                <p>&copy; {{year}} MinSlack. All rights reserved.</p>
-                <p>
-                    <a href="{{privacyUrl}}">Privacy Policy</a> | 
-                    <a href="{{termsUrl}}">Terms of Service</a>
-                </p>
-            </div>
+      <div class="email-wrapper">
+        <div class="email-header">
+          {{#if logoUrl}}
+          <img
+            src="{{logoUrl}}"
+            alt="{{organizationName}}"
+            class="logo"
+            style="max-width: 150px; margin-bottom: 15px"
+          />
+          {{/if}}
+          <h1>Verify Your Email Address</h1>
         </div>
+        <div class="email-body">
+          <p>Hi {{name}},</p>
+
+          <p>
+            Thanks for signing up for {{organizationName}}! We're excited to
+            have you on board. Please verify your email address to get started.
+          </p>
+
+          <div class="button-container">
+            <a href="{{verificationUrl}}" class="button"
+              >Verify Email Address</a
+            >
+          </div>
+
+          <p>Or use this verification code:</p>
+
+          <div class="verification-code">{{verificationCode}}</div>
+
+          <p>
+            If you didn't create an account with us, you can safely ignore this
+            email.
+          </p>
+
+          <div class="help-text">
+            <p>
+              If you're having trouble clicking the button, copy and paste the
+              URL below into your web browser:
+            </p>
+            <p>{{verificationUrl}}</p>
+          </div>
+        </div>
+        <div class="email-footer">
+          <p>&copy; {{year}} {{organizationName}}. All rights reserved.</p>
+          <p>
+            <a href="{{privacyUrl}}">Privacy Policy</a> |
+            <a href="{{termsUrl}}">Terms of Service</a>
+          </p>
+        </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>

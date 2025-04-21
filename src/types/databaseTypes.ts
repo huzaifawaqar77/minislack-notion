@@ -349,6 +349,49 @@ export interface VerificationTokens {
   used_at: Timestamp | null;
 }
 
+export interface Organizations {
+  id: Generated<string>;
+  name: string;
+  slug: string;
+  description: string | null;
+  logo_url: string | null;
+  favicon_url: string | null;
+  primary_color: string | null;
+  secondary_color: string | null;
+  created_by: string | null;
+  is_active: Generated<boolean | null>;
+  max_workspaces: number | null;
+  max_users_per_workspace: number | null;
+  created_at: Generated<Timestamp | null>;
+  updated_at: Generated<Timestamp | null>;
+  deleted_at: Timestamp | null;
+}
+
+export interface OrganizationDomains {
+  id: Generated<string>;
+  organization_id: string;
+  domain: string;
+  is_primary: Generated<boolean | null>;
+  is_verified: Generated<boolean | null>;
+  verification_token: string | null;
+  verified_at: Timestamp | null;
+  created_at: Generated<Timestamp | null>;
+  updated_at: Generated<Timestamp | null>;
+}
+
+export interface OrganizationSettings {
+  id: Generated<string>;
+  organization_id: string;
+  email_from_name: string | null;
+  email_template: string | null;
+  custom_css: string | null;
+  custom_js: string | null;
+  allow_public_signup: Generated<boolean | null>;
+  require_email_verification: Generated<boolean | null>;
+  created_at: Generated<Timestamp | null>;
+  updated_at: Generated<Timestamp | null>;
+}
+
 export interface WorkspaceMembers {
   created_at: Generated<Timestamp | null>;
   id: Generated<string>;
@@ -376,6 +419,7 @@ export interface Workspaces {
   is_public: Generated<boolean | null>;
   max_members: number | null;
   name: string;
+  organization_id: string | null;
   slug: string;
   updated_at: Generated<Timestamp | null>;
 }
@@ -397,6 +441,9 @@ export interface Database {
   message_reactions: MessageReactions;
   messages: Messages;
   notifications: Notifications;
+  organization_domains: OrganizationDomains;
+  organization_settings: OrganizationSettings;
+  organizations: Organizations;
   taggable_items: TaggableItems;
   tags: Tags;
   user_sessions: UserSessions;

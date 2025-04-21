@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { loginUser, registerUser } from "../repositories/userRepository";
 import { parseUserAgent, getClientIp } from "../utils/deviceInfo";
+import { DomainRequest } from "../middleware/domainMiddleware";
+import { getOrganizationSettings } from "../repositories/organizationRepository";
+import { OrganizationBranding } from "../services/emailService";
 
 export function loginController(req: Request, res: Response) {
   const { usernameOrEmail, password } = req.body;
@@ -40,7 +43,7 @@ export function loginController(req: Request, res: Response) {
   }
 }
 
-export const registerController = async (req: Request, res: Response) => {
+export const registerController = async (req: DomainRequest, res: Response) => {
   const { email, username, password, firstName, lastName } = req.body;
 
   console.log(req.body, "request ");
@@ -52,12 +55,43 @@ export const registerController = async (req: Request, res: Response) => {
   }
 
   try {
+    // Check if we're in an organization context
+    let organizationId: string | undefined;
+    let branding: OrganizationBranding | undefined;
+
+    if (req.organization) {
+      organizationId = req.organization.id;
+
+      // Get organization settings
+      const settings = await getOrganizationSettings(organizationId);
+
+      // Check if public signup is allowed
+      if (settings && settings.allow_public_signup === false) {
+        return res.status(403).json({
+          status: "error",
+          message: "Public registration is not allowed for this organization",
+        });
+      }
+
+      // Create branding object for email
+      branding = {
+        name: req.organization.name,
+        logoUrl: req.organization.logoUrl,
+        primaryColor: req.organization.primaryColor,
+        secondaryColor: req.organization.secondaryColor,
+        emailFromName: settings?.email_from_name || req.organization.name,
+      };
+    }
+
     const registerResult = await registerUser(
       email,
       username,
       password,
       firstName,
-      lastName
+      lastName,
+      true, // Send verification email
+      organizationId,
+      branding
     );
 
     return res.status(200).json({

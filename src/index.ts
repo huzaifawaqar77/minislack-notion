@@ -6,7 +6,9 @@ import cors from "cors";
 import AuthRoutes from "./routes/authRoutes";
 import SessionRoutes from "./routes/sessionRoutes";
 import VerificationRoutes from "./routes/verificationRoutes";
+import OrganizationRoutes from "./routes/organizationRoutes";
 import { port } from "./config/environment";
+import { detectDomain } from "./middleware/domainMiddleware";
 
 const app = express();
 
@@ -18,7 +20,10 @@ app.use(cors());
 // 2. middleware for reading request body
 app.use(express.json());
 
-// Add request IP and user agent middleware
+// 3. Domain detection middleware
+app.use(detectDomain);
+
+// 4. Request logging middleware
 app.use((req, _res, next) => {
   // Log request details for debugging
   console.log(
@@ -37,6 +42,9 @@ app.use("/sessions", SessionRoutes);
 
 // 3. Verification Routes
 app.use("/auth", VerificationRoutes);
+
+// 4. Organization Routes
+app.use("/organizations", OrganizationRoutes);
 
 async function testConnection() {
   try {

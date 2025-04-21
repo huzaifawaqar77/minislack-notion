@@ -6,7 +6,10 @@ import jwt from "jsonwebtoken";
 import { jwtSecret } from "../config/environment";
 import { createUserSession } from "./sessionRepository";
 import { generateVerificationToken } from "./verificationRepository";
-import { sendVerificationEmail } from "../services/emailService";
+import {
+  sendVerificationEmail,
+  OrganizationBranding,
+} from "../services/emailService";
 
 export async function registerUser(
   email: string,
@@ -14,7 +17,9 @@ export async function registerUser(
   password: string,
   firstName: string,
   lastName: string,
-  sendVerificationEmailFlag: boolean = true
+  sendVerificationEmailFlag: boolean = true,
+  organizationId?: string,
+  branding?: OrganizationBranding
 ) {
   console.log(
     email,
@@ -60,17 +65,42 @@ export async function registerUser(
 
   console.log("new user here", newUser);
 
+  // If organization ID is provided, create a default workspace for the user in that organization
+  if (organizationId) {
+    try {
+      // Create a personal workspace for the user in the organization
+      await db
+        .insertInto("workspaces")
+        .values({
+          id: crypto.randomUUID(),
+          name: `${firstName}'s Workspace`,
+          slug: `${username.toLowerCase()}-workspace`,
+          created_by: userId,
+          organization_id: organizationId,
+          is_public: false,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .execute();
+    } catch (error) {
+      console.error("Failed to create workspace for user:", error);
+      // Continue with registration even if workspace creation fails
+    }
+  }
+
   // Send verification email if flag is true
   if (sendVerificationEmailFlag) {
     try {
       // Generate a verification token
       const verificationToken = await generateVerificationToken(userId);
 
-      // Send verification email
+      // Send verification email with optional branding
       await sendVerificationEmail(
         email,
         firstName || username,
-        verificationToken
+        verificationToken,
+        undefined, // verification code
+        branding
       );
 
       console.log(`Verification email sent to ${email}`);

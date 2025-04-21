@@ -46,20 +46,35 @@ export function compileTemplate(templateName: string, data: any): string {
 }
 
 /**
+ * Organization branding interface
+ */
+export interface OrganizationBranding {
+  name?: string;
+  logoUrl?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
+  emailFromName?: string;
+}
+
+/**
  * Sends an email using the configured transporter
  *
  * @param to - Recipient email address
  * @param subject - Email subject
  * @param html - HTML content of the email
+ * @param customFromName - Optional custom from name
  * @returns Promise resolving to the send result
  */
 export async function sendEmail(
   to: string,
   subject: string,
-  html: string
+  html: string,
+  customFromName?: string
 ): Promise<any> {
+  const fromName = customFromName || emailFromName;
+
   const mailOptions = {
-    from: `"${emailFromName}" <${emailFrom}>`,
+    from: `"${fromName}" <${emailFrom}>`,
     to,
     subject,
     html,
@@ -118,7 +133,8 @@ export async function sendVerificationEmail(
   to: string,
   name: string,
   verificationToken: string,
-  verificationCode?: string
+  verificationCode?: string,
+  branding?: OrganizationBranding
 ): Promise<any> {
   // Import appUrl directly to ensure we get the correct value
   const { appUrl } = require("../config/environment");
@@ -127,7 +143,11 @@ export async function sendVerificationEmail(
 
   console.log("Creating verification email with URL:", verificationUrl);
 
-  // Compile the email template with user data
+  // Default colors
+  const primaryColor = branding?.primaryColor || "#10b981"; // Default emerald
+  const secondaryColor = branding?.secondaryColor || "#18181b"; // Default dark zinc
+
+  // Compile the email template with user data and branding
   const html = compileTemplate("emailVerification", {
     name,
     verificationUrl,
@@ -136,8 +156,18 @@ export async function sendVerificationEmail(
     year: new Date().getFullYear(),
     privacyUrl: `${appUrl}/privacy`,
     termsUrl: `${appUrl}/terms`,
+    // Add branding
+    logoUrl: branding?.logoUrl || "",
+    primaryColor,
+    secondaryColor,
+    organizationName: branding?.name || "MinSlack",
   });
 
-  // Send the email
-  return sendEmail(to, "Verify Your Email Address", html);
+  // Send the email with optional custom from name
+  return sendEmail(
+    to,
+    "Verify Your Email Address",
+    html,
+    branding?.emailFromName
+  );
 }
