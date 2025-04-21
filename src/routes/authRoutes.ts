@@ -1,13 +1,19 @@
-import express from "express";
-import {registerUser} from "../repositories/userRepository";
-import {loginController, registerController} from "../controller/authController";
+import express, { Router, Request, Response } from "express";
+import {
+  loginController,
+  registerController,
+} from "../controller/authController";
 
-const router = express.Router();
+const router: Router = express.Router();
 
+// Register a new user
+router.post("/register", async (req: Request, res: Response) => {
+  registerController(req, res);
+});
 
-router.post('/register', registerController);
-
-router.post('/login', loginController)
-
+// Login a user
+router.post("/login", async (req: Request, res: Response) => {
+  await loginController(req, res);
+});
 
 export default router;

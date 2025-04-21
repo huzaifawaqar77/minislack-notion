@@ -5,11 +5,16 @@
 
 import type { ColumnType } from "kysely";
 
-export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
+export type Generated<T> =
+  T extends ColumnType<infer S, infer I, infer U>
     ? ColumnType<S, I | undefined, U>
     : ColumnType<T, T | undefined, T>;
 
-export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
+export type Int8 = ColumnType<
+  string,
+  bigint | number | string,
+  bigint | number | string
+>;
 
 export type Json = JsonValue;
 
@@ -333,6 +338,17 @@ export interface Webhooks {
   workspace_id: string | null;
 }
 
+export interface VerificationTokens {
+  id: Generated<string>;
+  user_id: string | null;
+  token: string | null;
+  type: string | null;
+  created_at: Generated<Timestamp | null>;
+  expires_at: Timestamp | null;
+  is_used: Generated<boolean | null>;
+  used_at: Timestamp | null;
+}
+
 export interface WorkspaceMembers {
   created_at: Generated<Timestamp | null>;
   id: Generated<string>;
@@ -385,6 +401,7 @@ export interface Database {
   tags: Tags;
   user_sessions: UserSessions;
   users: Users;
+  verification_tokens: VerificationTokens;
   webhooks: Webhooks;
   workspace_members: WorkspaceMembers;
   workspaces: Workspaces;
