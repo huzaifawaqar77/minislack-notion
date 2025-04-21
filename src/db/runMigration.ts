@@ -30,6 +30,7 @@ async function main() {
       "create_organizations_table.sql",
       "create_additional_tables.sql",
       "create_integration_tables.sql",
+      "add_oauth_fields.sql",
     ];
 
     // Run each migration

@@ -1,9 +1,14 @@
 import { Request, Response } from "express";
-import { loginUser, registerUser } from "../repositories/userRepository";
+import {
+  loginUser,
+  registerUser,
+  getUserById,
+} from "../repositories/userRepository";
 import { parseUserAgent, getClientIp } from "../utils/deviceInfo";
 import { DomainRequest } from "../middleware/domainMiddleware";
 import { getOrganizationSettings } from "../repositories/organizationRepository";
 import { OrganizationBranding } from "../services/emailService";
+import { verifyToken } from "../middleware/authMiddleware";
 
 export function loginController(req: Request, res: Response) {
   const { usernameOrEmail, password } = req.body;
@@ -105,4 +110,64 @@ export const registerController = async (req: DomainRequest, res: Response) => {
       message: error instanceof Error ? error.message : "Registration failed",
     });
   }
+};
+
+/**
+ * Handles OAuth success
+ */
+export const oauthSuccessController = async (req: Request, res: Response) => {
+  const { token } = req.query;
+
+  if (!token) {
+    return res.status(400).json({
+      status: "error",
+      message: "Token is required",
+    });
+  }
+
+  try {
+    // Verify the token
+    const decoded = verifyToken(token as string);
+
+    if (!decoded || !decoded.id) {
+      return res.status(401).json({
+        status: "error",
+        message: "Invalid token",
+      });
+    }
+
+    // Get the user
+    const user = await getUserById(decoded.id);
+
+    if (!user) {
+      return res.status(404).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      status: "success",
+      user,
+      token,
+    });
+  } catch (error) {
+    console.error("OAuth success error:", error);
+    return res.status(401).json({
+      status: "error",
+      message: error instanceof Error ? error.message : "Authentication failed",
+    });
+  }
+};
+
+/**
+ * Handles OAuth error
+ */
+export const oauthErrorController = (req: Request, res: Response) => {
+  const { provider } = req.query;
+
+  return res.status(401).json({
+    status: "error",
+    message: `Authentication with ${provider || "OAuth provider"} failed`,
+  });
 };

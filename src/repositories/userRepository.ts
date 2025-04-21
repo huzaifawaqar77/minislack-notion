@@ -121,6 +121,33 @@ export async function registerUser(
 
 // Login User
 
+/**
+ * Gets a user by ID
+ *
+ * @param id - The ID of the user
+ * @returns The user or null if not found
+ */
+export async function getUserById(id: string) {
+  const user = await db
+    .selectFrom("users")
+    .select([
+      "id",
+      "email",
+      "username",
+      "first_name",
+      "last_name",
+      "avatar_url",
+      "email_verified",
+      "created_at",
+      "last_active",
+      "is_admin",
+    ])
+    .where("id", "=", id)
+    .executeTakeFirst();
+
+  return user;
+}
+
 export async function loginUser(
   emailOrUsername: string,
   password: string,

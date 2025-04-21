@@ -4,6 +4,8 @@ import { db } from "./db/database";
 import { sql } from "kysely";
 import cors from "cors";
 import path from "path";
+import session from "express-session";
+import passport from "passport";
 
 import AuthRoutes from "./routes/authRoutes";
 import SessionRoutes from "./routes/sessionRoutes";
@@ -18,15 +20,20 @@ import NotificationRoutes from "./routes/notificationRoutes";
 import InvitationRoutes from "./routes/invitationRoutes";
 import WebhookRoutes from "./routes/webhookRoutes";
 import AnalyticsRoutes from "./routes/analyticsRoutes";
-import { port } from "./config/environment";
+import OAuthRoutes from "./routes/oauthRoutes";
+import { port, sessionSecret } from "./config/environment";
 import { detectDomain } from "./middleware/domainMiddleware";
 import { initializeSocketIO } from "./services/socketService";
+import { initializeOAuth } from "./services/oauthService";
 
 const app = express();
 const httpServer = createServer(app);
 
 // Initialize Socket.IO
 const io = initializeSocketIO(httpServer);
+
+// Initialize OAuth
+const passportInstance = initializeOAuth();
 
 // Make io available in the request object
 declare global {
@@ -63,7 +70,20 @@ app.use((req, _res, next) => {
   next();
 });
 
-// 6. Serve static files from uploads directory
+// 6. Session middleware
+app.use(
+  session({
+    secret: sessionSecret,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === "production" },
+  })
+);
+
+// 7. Initialize Passport
+app.use(passportInstance.initialize());
+
+// 8. Serve static files from uploads directory
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // Routes
@@ -106,6 +126,9 @@ app.use("/", WebhookRoutes);
 
 // 13. Analytics Routes
 app.use("/", AnalyticsRoutes);
+
+// 14. OAuth Routes
+app.use("/auth", OAuthRoutes);
 
 async function testConnection() {
   try {
