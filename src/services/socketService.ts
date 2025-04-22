@@ -549,6 +549,8 @@ export function initializeSocketIO(httpServer: HttpServer): SocketIOServer {
           channelId: channelId,
           type: "message",
           created_at: new Date().toISOString(),
+          // Add a timestamp field with the current time in milliseconds for easier client-side conversion
+          timestamp: Date.now(),
         };
 
         // Get the room name

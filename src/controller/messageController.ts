@@ -53,6 +53,8 @@ export async function createMessageController(
       parent_id: message.parent_id,
       created_at: message.created_at,
       updated_at: message.updated_at,
+      // Add a timestamp field with the current time in milliseconds for easier client-side conversion
+      timestamp: Date.now(),
       sender_id: req.user.id,
       user_id: req.user.id, // Add user_id for consistency
       sender_name: user
