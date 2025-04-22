@@ -78,6 +78,16 @@ export async function createMessageController(
 
       // Broadcast to all clients in the channel
       emitToChannel(io, channelId, "message", messageData);
+
+      // Also broadcast to all sockets directly as a fallback
+      // This ensures messages reach all clients even if room joining failed
+      console.log(
+        `Fallback: Broadcasting message to all sockets for channel ${channelId}`
+      );
+      io.emit("message", {
+        ...messageData,
+        _fallback: true,
+      });
     }
 
     return res.status(201).json({

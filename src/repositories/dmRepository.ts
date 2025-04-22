@@ -145,13 +145,50 @@ export async function getUserDMChannels(userId: string) {
         .limit(1)
         .executeTakeFirst();
 
-      // Get unread message count
-      const unreadCount = await db
-        .selectFrom("messages as m")
-        .select(sql`COUNT(*)::integer`.as("count"))
-        .where("m.channel_id", "=", channel.id)
-        .where("m.user_id", "!=", userId)
+      // Get the last read message ID for this user in this channel
+      const memberInfo = await db
+        .selectFrom("channel_members")
+        .select(["last_read_message_id"])
+        .where("channel_id", "=", channel.id)
+        .where("user_id", "=", userId)
         .executeTakeFirst();
+
+      // Get unread message count - only count messages from other users that are newer than the last read message
+      let unreadCount;
+      if (memberInfo?.last_read_message_id) {
+        // If we have a last read message ID, count messages newer than that
+        const lastReadMessage = await db
+          .selectFrom("messages")
+          .select(["created_at"])
+          .where("id", "=", memberInfo.last_read_message_id)
+          .executeTakeFirst();
+
+        if (lastReadMessage) {
+          unreadCount = await db
+            .selectFrom("messages as m")
+            .select(sql`COUNT(*)::integer`.as("count"))
+            .where("m.channel_id", "=", channel.id)
+            .where("m.user_id", "!=", userId)
+            .where("m.created_at", ">", lastReadMessage.created_at)
+            .executeTakeFirst();
+        } else {
+          // Fallback if we can't find the last read message
+          unreadCount = await db
+            .selectFrom("messages as m")
+            .select(sql`COUNT(*)::integer`.as("count"))
+            .where("m.channel_id", "=", channel.id)
+            .where("m.user_id", "!=", userId)
+            .executeTakeFirst();
+        }
+      } else {
+        // If no last read message, count all messages from other users
+        unreadCount = await db
+          .selectFrom("messages as m")
+          .select(sql`COUNT(*)::integer`.as("count"))
+          .where("m.channel_id", "=", channel.id)
+          .where("m.user_id", "!=", userId)
+          .executeTakeFirst();
+      }
 
       return {
         ...channel,
