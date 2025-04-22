@@ -64,6 +64,24 @@ export const userApi = {
   },
 
   /**
+   * Get a user by email
+   */
+  getUserByEmail: async (email: string): Promise<ApiResponse<User> | null> => {
+    try {
+      const response = await axios.get(getApiUrl(`/users/email/${email}`), {
+        headers: getAuthHeaders(),
+      });
+      return {
+        status: "success",
+        data: response.data.data,
+      };
+    } catch (error: any) {
+      console.error(`Failed to get user by email ${email}:`, error);
+      return null;
+    }
+  },
+
+  /**
    * Update the current user's profile
    */
   updateProfile: async (data: Partial<User>): Promise<ApiResponse<User>> => {
