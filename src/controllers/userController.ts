@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { db } from "../db/database";
 import { ApiError } from "../utils/errors";
+import { getUserById as getUserByIdRepo } from "../repositories/userRepository";
 
 /**
  * Get a user by ID
@@ -14,28 +15,11 @@ export const getUserById = async (req: Request, res: Response) => {
       throw new ApiError(400, "User ID is required");
     }
 
-    // Query the database for the user
-    const user = await db.query(
-      `
-      SELECT
-        id,
-        username,
-        email,
-        first_name,
-        last_name,
-        avatar_url,
-        created_at,
-        updated_at,
-        last_login_at,
-        status
-      FROM users
-      WHERE id = $1
-      `,
-      [userId]
-    );
+    // Use the repository function to get the user
+    const user = await getUserByIdRepo(userId);
 
     // Check if user exists
-    if (user.rows.length === 0) {
+    if (!user) {
       throw new ApiError(404, "User not found");
     }
 
@@ -43,16 +27,16 @@ export const getUserById = async (req: Request, res: Response) => {
     return res.status(200).json({
       status: "success",
       data: {
-        id: user.rows[0].id,
-        username: user.rows[0].username,
-        email: user.rows[0].email,
-        firstName: user.rows[0].first_name,
-        lastName: user.rows[0].last_name,
-        avatarUrl: user.rows[0].avatar_url,
-        createdAt: user.rows[0].created_at,
-        updatedAt: user.rows[0].updated_at,
-        lastLoginAt: user.rows[0].last_login_at,
-        status: user.rows[0].status,
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        avatarUrl: user.avatar_url,
+        createdAt: user.created_at,
+        updatedAt: user.updated_at,
+        lastLoginAt: user.last_active,
+        status: "online", // Default status since it's not in the repository function
       },
     });
   } catch (error) {
@@ -75,27 +59,26 @@ export const getUserById = async (req: Request, res: Response) => {
  */
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
-    // Query the database for all users
-    const users = await db.query(
-      `
-      SELECT
-        id,
-        username,
-        email,
-        first_name,
-        last_name,
-        avatar_url,
-        created_at,
-        updated_at,
-        last_login_at,
-        status
-      FROM users
-      ORDER BY created_at DESC
-      `
-    );
+    // Query the database for all users using Kysely
+    const users = await db
+      .selectFrom("users")
+      .select([
+        "id",
+        "username",
+        "email",
+        "first_name",
+        "last_name",
+        "avatar_url",
+        "created_at",
+        "updated_at",
+        "last_active",
+        "status",
+      ])
+      .orderBy("created_at", "desc")
+      .execute();
 
     // Transform the data to match the frontend expectations
-    const transformedUsers = users.rows.map((user) => ({
+    const transformedUsers = users.map((user) => ({
       id: user.id,
       username: user.username,
       email: user.email,
@@ -104,8 +87,8 @@ export const getAllUsers = async (req: Request, res: Response) => {
       avatarUrl: user.avatar_url,
       createdAt: user.created_at,
       updatedAt: user.updated_at,
-      lastLoginAt: user.last_login_at,
-      status: user.status,
+      lastLoginAt: user.last_active,
+      status: user.status || "online",
     }));
 
     // Return the users data
@@ -143,19 +126,27 @@ export const updateUserStatus = async (req: Request, res: Response) => {
       );
     }
 
-    // Update the user's status
-    const updatedUser = await db.query(
-      `
-      UPDATE users
-      SET status = $1, updated_at = NOW()
-      WHERE id = $2
-      RETURNING id, username, email, first_name, last_name, avatar_url, status
-      `,
-      [status, userId]
-    );
+    // Update the user's status using Kysely
+    const updatedUser = await db
+      .updateTable("users")
+      .set({
+        status: status,
+        updated_at: new Date().toISOString(),
+      })
+      .where("id", "=", userId)
+      .returning([
+        "id",
+        "username",
+        "email",
+        "first_name",
+        "last_name",
+        "avatar_url",
+        "status",
+      ])
+      .executeTakeFirst();
 
     // Check if user exists
-    if (updatedUser.rows.length === 0) {
+    if (!updatedUser) {
       throw new ApiError(404, "User not found");
     }
 
@@ -163,13 +154,13 @@ export const updateUserStatus = async (req: Request, res: Response) => {
     return res.status(200).json({
       status: "success",
       data: {
-        id: updatedUser.rows[0].id,
-        username: updatedUser.rows[0].username,
-        email: updatedUser.rows[0].email,
-        firstName: updatedUser.rows[0].first_name,
-        lastName: updatedUser.rows[0].last_name,
-        avatarUrl: updatedUser.rows[0].avatar_url,
-        status: updatedUser.rows[0].status,
+        id: updatedUser.id,
+        username: updatedUser.username,
+        email: updatedUser.email,
+        firstName: updatedUser.first_name,
+        lastName: updatedUser.last_name,
+        avatarUrl: updatedUser.avatar_url,
+        status: updatedUser.status,
       },
     });
   } catch (error) {

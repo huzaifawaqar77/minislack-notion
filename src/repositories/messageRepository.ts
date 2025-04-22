@@ -142,12 +142,24 @@ export async function getChannelMessages(
   before?: string,
   after?: string
 ) {
+  // Get channel info to check if it's a DM channel
+  const channel = await getChannelById(channelId);
+
+  if (!channel) {
+    throw new Error(`Channel with ID '${channelId}' not found`);
+  }
+
   // Check if user has access to the channel
   const hasAccess = await isChannelMember(channelId, userId);
 
   if (!hasAccess) {
     throw new Error("You don't have access to this channel");
   }
+
+  // Log for debugging
+  console.log(
+    `Fetching messages for channel ${channelId}, user ${userId}, isDirect: ${channel.is_direct}`
+  );
 
   // Build the query
   let query = db
@@ -189,10 +201,14 @@ export async function getChannelMessages(
     .limit(limit)
     .execute();
 
+  console.log(`Retrieved ${messages.length} messages from database`);
+
   // Get attachments for these messages
   const messageIds = messages.map((message) => message.id);
 
+  // Return the messages even if there are no attachments
   if (messageIds.length === 0) {
+    console.log(`No messages found for channel ${channelId}`);
     return [];
   }
 
