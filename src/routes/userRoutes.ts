@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getUserById,
+  getUserByEmail,
   getAllUsers,
   updateUserStatus,
 } from "../controllers/userController";
@@ -17,6 +18,9 @@ router.get("/search", searchUsersController);
 
 // Get all users
 router.get("/", getAllUsers);
+
+// Get a user by email
+router.get("/email/:email", getUserByEmail);
 
 // Get a user by ID
 router.get("/:userId", getUserById);

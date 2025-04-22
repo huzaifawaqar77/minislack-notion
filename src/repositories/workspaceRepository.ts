@@ -28,26 +28,26 @@ export interface UpdateWorkspaceInput {
 
 /**
  * Creates a new workspace
- * 
+ *
  * @param input - Workspace creation input
  * @returns The created workspace
  */
 export async function createWorkspace(input: CreateWorkspaceInput) {
   // Generate a slug from the name
   let slug = slugify(input.name);
-  
+
   // Check if slug already exists
   const existingWorkspace = await db
     .selectFrom("workspaces")
     .select(["id"])
     .where("slug", "=", slug)
     .executeTakeFirst();
-  
+
   // If slug exists, append a random string
   if (existingWorkspace) {
-    slug = `${slug}-${crypto.randomBytes(3).toString('hex')}`;
+    slug = `${slug}-${crypto.randomBytes(3).toString("hex")}`;
   }
-  
+
   // Create the workspace
   const workspace = await db
     .insertInto("workspaces")
@@ -66,7 +66,7 @@ export async function createWorkspace(input: CreateWorkspaceInput) {
     })
     .returningAll()
     .executeTakeFirstOrThrow();
-  
+
   // Add the creator as a member with admin role
   await db
     .insertInto("workspace_members")
@@ -79,13 +79,13 @@ export async function createWorkspace(input: CreateWorkspaceInput) {
       updated_at: new Date().toISOString(),
     })
     .execute();
-  
+
   return workspace;
 }
 
 /**
  * Gets a workspace by ID
- * 
+ *
  * @param id - The ID of the workspace
  * @returns The workspace or null if not found
  */
@@ -100,7 +100,7 @@ export async function getWorkspaceById(id: string) {
 
 /**
  * Gets a workspace by slug
- * 
+ *
  * @param slug - The slug of the workspace
  * @returns The workspace or null if not found
  */
@@ -115,46 +115,53 @@ export async function getWorkspaceBySlug(slug: string) {
 
 /**
  * Gets all workspaces for a user
- * 
+ *
  * @param userId - The ID of the user
  * @param organizationId - Optional organization ID to filter by
  * @returns Array of workspaces
  */
-export async function getWorkspacesForUser(userId: string, organizationId?: string) {
+export async function getWorkspacesForUser(
+  userId: string,
+  organizationId?: string
+) {
   let query = db
     .selectFrom("workspaces")
-    .innerJoin("workspace_members", "workspace_members.workspace_id", "workspaces.id")
+    .innerJoin(
+      "workspace_members",
+      "workspace_members.workspace_id",
+      "workspaces.id"
+    )
     .selectAll("workspaces")
     .where("workspace_members.user_id", "=", userId)
     .where("workspaces.deleted_at", "is", null);
-  
+
   // Filter by organization if provided
   if (organizationId) {
     query = query.where("workspaces.organization_id", "=", organizationId);
   }
-  
+
   return query.execute();
 }
 
 /**
  * Updates a workspace
- * 
+ *
  * @param id - The ID of the workspace
  * @param input - The fields to update
  * @returns The updated workspace
  */
 export async function updateWorkspace(id: string, input: UpdateWorkspaceInput) {
   const workspace = await getWorkspaceById(id);
-  
+
   if (!workspace) {
     throw new Error(`Workspace with ID '${id}' not found`);
   }
-  
+
   // If name is changing, update the slug
   let slug = workspace.slug;
   if (input.name && input.name !== workspace.name) {
     slug = slugify(input.name);
-    
+
     // Check if new slug already exists
     const existingWorkspace = await db
       .selectFrom("workspaces")
@@ -162,22 +169,28 @@ export async function updateWorkspace(id: string, input: UpdateWorkspaceInput) {
       .where("slug", "=", slug)
       .where("id", "!=", id)
       .executeTakeFirst();
-    
+
     // If slug exists, append a random string
     if (existingWorkspace) {
-      slug = `${slug}-${crypto.randomBytes(3).toString('hex')}`;
+      slug = `${slug}-${crypto.randomBytes(3).toString("hex")}`;
     }
   }
-  
+
   return db
     .updateTable("workspaces")
     .set({
       name: input.name !== undefined ? input.name : workspace.name,
       slug: input.name !== undefined ? slug : workspace.slug,
-      description: input.description !== undefined ? input.description : workspace.description,
-      icon_url: input.iconUrl !== undefined ? input.iconUrl : workspace.icon_url,
-      banner_url: input.bannerUrl !== undefined ? input.bannerUrl : workspace.banner_url,
-      is_public: input.isPublic !== undefined ? input.isPublic : workspace.is_public,
+      description:
+        input.description !== undefined
+          ? input.description
+          : workspace.description,
+      icon_url:
+        input.iconUrl !== undefined ? input.iconUrl : workspace.icon_url,
+      banner_url:
+        input.bannerUrl !== undefined ? input.bannerUrl : workspace.banner_url,
+      is_public:
+        input.isPublic !== undefined ? input.isPublic : workspace.is_public,
       updated_at: new Date().toISOString(),
     })
     .where("id", "=", id)
@@ -187,17 +200,17 @@ export async function updateWorkspace(id: string, input: UpdateWorkspaceInput) {
 
 /**
  * Soft deletes a workspace
- * 
+ *
  * @param id - The ID of the workspace
  * @returns True if successful
  */
 export async function deleteWorkspace(id: string) {
   const workspace = await getWorkspaceById(id);
-  
+
   if (!workspace) {
     throw new Error(`Workspace with ID '${id}' not found`);
   }
-  
+
   await db
     .updateTable("workspaces")
     .set({
@@ -206,13 +219,13 @@ export async function deleteWorkspace(id: string) {
     })
     .where("id", "=", id)
     .execute();
-  
+
   return true;
 }
 
 /**
  * Checks if a user is a member of a workspace
- * 
+ *
  * @param workspaceId - The ID of the workspace
  * @param userId - The ID of the user
  * @returns True if the user is a member
@@ -224,13 +237,13 @@ export async function isWorkspaceMember(workspaceId: string, userId: string) {
     .where("workspace_id", "=", workspaceId)
     .where("user_id", "=", userId)
     .executeTakeFirst();
-  
+
   return !!member;
 }
 
 /**
  * Gets a user's role in a workspace
- * 
+ *
  * @param workspaceId - The ID of the workspace
  * @param userId - The ID of the user
  * @returns The user's role or null if not a member
@@ -242,13 +255,13 @@ export async function getWorkspaceRole(workspaceId: string, userId: string) {
     .where("workspace_id", "=", workspaceId)
     .where("user_id", "=", userId)
     .executeTakeFirst();
-  
+
   return member ? member.role : null;
 }
 
 /**
  * Gets all members of a workspace
- * 
+ *
  * @param workspaceId - The ID of the workspace
  * @returns Array of workspace members with user details
  */
@@ -266,6 +279,8 @@ export async function getWorkspaceMembers(workspaceId: string) {
       "users.first_name",
       "users.last_name",
       "users.avatar_url",
+      "users.status",
+      "users.last_active",
     ])
     .where("workspace_members.workspace_id", "=", workspaceId)
     .execute();
@@ -273,13 +288,17 @@ export async function getWorkspaceMembers(workspaceId: string) {
 
 /**
  * Adds a member to a workspace
- * 
+ *
  * @param workspaceId - The ID of the workspace
  * @param userId - The ID of the user
  * @param role - The role to assign
  * @returns The created membership
  */
-export async function addWorkspaceMember(workspaceId: string, userId: string, role: string = "member") {
+export async function addWorkspaceMember(
+  workspaceId: string,
+  userId: string,
+  role: string = "member"
+) {
   // Check if already a member
   const existingMember = await db
     .selectFrom("workspace_members")
@@ -287,11 +306,11 @@ export async function addWorkspaceMember(workspaceId: string, userId: string, ro
     .where("workspace_id", "=", workspaceId)
     .where("user_id", "=", userId)
     .executeTakeFirst();
-  
+
   if (existingMember) {
     throw new Error("User is already a member of this workspace");
   }
-  
+
   // Add the member
   return db
     .insertInto("workspace_members")
@@ -309,30 +328,37 @@ export async function addWorkspaceMember(workspaceId: string, userId: string, ro
 
 /**
  * Removes a member from a workspace
- * 
+ *
  * @param workspaceId - The ID of the workspace
  * @param userId - The ID of the user
  * @returns True if successful
  */
-export async function removeWorkspaceMember(workspaceId: string, userId: string) {
+export async function removeWorkspaceMember(
+  workspaceId: string,
+  userId: string
+) {
   await db
     .deleteFrom("workspace_members")
     .where("workspace_id", "=", workspaceId)
     .where("user_id", "=", userId)
     .execute();
-  
+
   return true;
 }
 
 /**
  * Updates a member's role in a workspace
- * 
+ *
  * @param workspaceId - The ID of the workspace
  * @param userId - The ID of the user
  * @param role - The new role
  * @returns The updated membership
  */
-export async function updateWorkspaceMemberRole(workspaceId: string, userId: string, role: string) {
+export async function updateWorkspaceMemberRole(
+  workspaceId: string,
+  userId: string,
+  role: string
+) {
   return db
     .updateTable("workspace_members")
     .set({

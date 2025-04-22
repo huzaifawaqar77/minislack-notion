@@ -36,7 +36,7 @@ export const getUserById = async (req: Request, res: Response) => {
         createdAt: user.created_at,
         updatedAt: user.updated_at,
         lastLoginAt: user.last_active,
-        status: "online", // Default status since it's not in the repository function
+        status: user.status || "offline", // Use status from DB or default to offline
       },
     });
   } catch (error) {
@@ -50,6 +50,72 @@ export const getUserById = async (req: Request, res: Response) => {
     return res.status(500).json({
       status: "error",
       message: "Failed to get user",
+    });
+  }
+};
+
+/**
+ * Get a user by email
+ */
+export const getUserByEmail = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.params;
+
+    // Validate email
+    if (!email) {
+      throw new ApiError(400, "Email is required");
+    }
+
+    // Query the database for the user
+    const user = await db
+      .selectFrom("users")
+      .select([
+        "id",
+        "username",
+        "email",
+        "first_name",
+        "last_name",
+        "avatar_url",
+        "created_at",
+        "updated_at",
+        "last_active",
+        "status",
+      ])
+      .where("email", "=", email)
+      .executeTakeFirst();
+
+    // Check if user exists
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+
+    // Return the user data
+    return res.status(200).json({
+      status: "success",
+      data: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        avatarUrl: user.avatar_url,
+        createdAt: user.created_at,
+        updatedAt: user.updated_at,
+        lastLoginAt: user.last_active,
+        status: user.status || "offline", // Use status from DB or default to offline
+      },
+    });
+  } catch (error) {
+    console.error("Error getting user by email:", error);
+    if (error instanceof ApiError) {
+      return res.status(error.statusCode).json({
+        status: "error",
+        message: error.message,
+      });
+    }
+    return res.status(500).json({
+      status: "error",
+      message: "Failed to get user by email",
     });
   }
 };
