@@ -89,7 +89,7 @@ export function Sidebar({
 
   return (
     <div
-      className={cn("h-full flex flex-col text-white", className)}
+      className={cn("h-full flex flex-col text-sidebar-foreground", className)}
       {...props}
     >
       <div
@@ -99,8 +99,8 @@ export function Sidebar({
         )}
       >
         {isCollapsed ? (
-          <div className="bg-emerald-600 rounded-md w-8 h-8 flex items-center justify-center">
-            <span className="font-bold text-white">M</span>
+          <div className="bg-accent rounded-md w-8 h-8 flex items-center justify-center">
+            <span className="font-bold text-accent-foreground">M</span>
           </div>
         ) : (
           <span className="font-bold text-xl">MinSlack</span>
@@ -116,7 +116,7 @@ export function Sidebar({
               )}
             >
               {!isCollapsed && (
-                <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+                <h2 className="text-xs font-semibold text-sidebar-foreground/70 uppercase tracking-wider">
                   Workspaces
                 </h2>
               )}
@@ -126,7 +126,7 @@ export function Sidebar({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-5 w-5 text-zinc-400 hover:text-white"
+                      className="h-5 w-5 text-sidebar-foreground/70 hover:text-sidebar-foreground"
                     >
                       <PlusCircle className="h-4 w-4" />
                       <span className="sr-only">Add workspace</span>
@@ -138,10 +138,10 @@ export function Sidebar({
             <div className="space-y-1 mt-2">
               {isLoading ? (
                 <div className="flex items-center justify-center py-2">
-                  <Loader2 className="h-4 w-4 animate-spin text-zinc-400" />
+                  <Loader2 className="h-4 w-4 animate-spin text-sidebar-foreground/70" />
                 </div>
               ) : workspaces.length === 0 ? (
-                <div className="px-2 py-2 text-center text-xs text-zinc-400">
+                <div className="px-2 py-2 text-center text-xs text-sidebar-foreground/70">
                   No workspaces
                 </div>
               ) : (
@@ -151,9 +151,9 @@ export function Sidebar({
                     variant="ghost"
                     className={cn(
                       activeWorkspace?.id === workspace.id
-                        ? "bg-zinc-800"
-                        : "hover:bg-zinc-800",
-                      "w-full text-white justify-start",
+                        ? "bg-sidebar-accent"
+                        : "hover:bg-sidebar-accent",
+                      "w-full text-sidebar-foreground justify-start",
                       isCollapsed ? "h-8 w-8 p-0 mx-auto" : "px-2 py-1 h-auto"
                     )}
                     onClick={() => setActiveWorkspace(workspace)}
@@ -161,7 +161,7 @@ export function Sidebar({
                     {isCollapsed ? (
                       <div className="flex h-8 w-8 items-center justify-center">
                         <span className="sr-only">{workspace.name}</span>
-                        <span className="flex h-6 w-6 items-center justify-center rounded-sm bg-emerald-600 text-white text-xs font-medium">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-sm bg-accent text-accent-foreground text-xs font-medium">
                           {workspace.name.charAt(0).toUpperCase()}
                         </span>
                       </div>
@@ -173,24 +173,24 @@ export function Sidebar({
               )}
             </div>
           </div>
-          <div className="mx-1 h-px bg-zinc-800" />
+          <div className="mx-1 h-px bg-sidebar-border" />
 
           {activeWorkspace && (
             <>
               <div className={cn("py-2", isCollapsed ? "px-1" : "px-3")}>
                 <ChannelList isCollapsed={isCollapsed} />
               </div>
-              <div className="mx-1 h-px bg-zinc-800" />
+              <div className="mx-1 h-px bg-sidebar-border" />
               <div className={cn("py-2", isCollapsed ? "px-1" : "px-3")}>
                 <DMSidebar isCollapsed={isCollapsed} />
               </div>
             </>
           )}
 
-          <div className="mx-1 h-px bg-zinc-800" />
+          <div className="mx-1 h-px bg-sidebar-border" />
           <div className={cn("py-2", isCollapsed ? "px-1" : "px-3")}>
             {!isCollapsed && (
-              <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">
+              <h2 className="text-xs font-semibold text-sidebar-foreground/70 uppercase tracking-wider mb-2">
                 Navigation
               </h2>
             )}
@@ -202,8 +202,8 @@ export function Sidebar({
                   className={cn(
                     "flex items-center gap-2 rounded-md text-sm font-medium transition-all",
                     pathname === route.href
-                      ? "bg-zinc-800 text-white"
-                      : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
+                      ? "bg-sidebar-accent text-sidebar-foreground"
+                      : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
                     isCollapsed
                       ? "h-8 w-8 justify-center p-0 mx-auto"
                       : "px-2 py-1.5"

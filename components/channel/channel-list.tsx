@@ -54,7 +54,7 @@ export function ChannelList({ isCollapsed = false }: ChannelListProps) {
         )}
       >
         {!isCollapsed && (
-          <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+          <h2 className="text-xs font-semibold text-sidebar-foreground/70 uppercase tracking-wider">
             Channels
           </h2>
         )}
@@ -64,7 +64,7 @@ export function ChannelList({ isCollapsed = false }: ChannelListProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-5 w-5 text-zinc-400 hover:text-white"
+                className="h-5 w-5 text-sidebar-foreground/70 hover:text-sidebar-foreground"
               >
                 <Plus className="h-4 w-4" />
                 <span className="sr-only">Add Channel</span>
@@ -136,8 +136,8 @@ function ChannelItem({
         className={cn(
           "font-normal transition-all",
           isActive
-            ? "bg-zinc-800 text-white"
-            : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
+            ? "bg-sidebar-accent text-sidebar-foreground"
+            : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
           isCollapsed
             ? "h-8 w-8 p-0 mx-auto justify-center"
             : "w-full justify-start px-2 py-1.5 h-auto"

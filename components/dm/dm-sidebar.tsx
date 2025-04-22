@@ -56,7 +56,7 @@ export function DMSidebar({ isCollapsed = false }: DMSidebarProps) {
         )}
       >
         {!isCollapsed && (
-          <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+          <h2 className="text-xs font-semibold text-sidebar-foreground/70 uppercase tracking-wider">
             Direct Messages
           </h2>
         )}
@@ -64,7 +64,7 @@ export function DMSidebar({ isCollapsed = false }: DMSidebarProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="h-5 w-5 text-zinc-400 hover:text-white"
+            className="h-5 w-5 text-sidebar-foreground/70 hover:text-sidebar-foreground"
             onClick={() => router.push("/dashboard/dm/new")}
           >
             <MessageSquarePlus className="h-4 w-4" />
@@ -76,10 +76,10 @@ export function DMSidebar({ isCollapsed = false }: DMSidebarProps) {
       <div className="mt-2">
         {isLoading ? (
           <div className="flex justify-center items-center py-2">
-            <Loader2 className="h-4 w-4 animate-spin text-zinc-400" />
+            <Loader2 className="h-4 w-4 animate-spin text-sidebar-foreground/70" />
           </div>
         ) : filteredChannels.length === 0 ? (
-          <div className="py-1 text-xs text-zinc-400 text-center">
+          <div className="py-1 text-xs text-sidebar-foreground/70 text-center">
             No direct messages
           </div>
         ) : (
@@ -92,8 +92,8 @@ export function DMSidebar({ isCollapsed = false }: DMSidebarProps) {
                   className={cn(
                     "font-normal transition-all",
                     pathname === `/dashboard/dm/${channel.id}`
-                      ? "bg-zinc-800 text-white"
-                      : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
+                      ? "bg-sidebar-accent text-sidebar-foreground"
+                      : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
                     isCollapsed
                       ? "h-8 w-8 p-0 mx-auto justify-center"
                       : "w-full justify-start px-2 py-1.5 h-auto"
@@ -109,7 +109,7 @@ export function DMSidebar({ isCollapsed = false }: DMSidebarProps) {
                           }
                           alt={channel.other_user.username || "User"}
                         />
-                        <AvatarFallback className="text-xs bg-zinc-700 text-white">
+                        <AvatarFallback className="text-xs bg-accent/80 text-accent-foreground">
                           {channel.other_user.first_name
                             ? channel.other_user.first_name.charAt(0)
                             : channel.other_user.username?.charAt(0) || "U"}
@@ -134,7 +134,7 @@ export function DMSidebar({ isCollapsed = false }: DMSidebarProps) {
                           }
                           alt={channel.other_user.username || "User"}
                         />
-                        <AvatarFallback className="text-xs bg-zinc-700 text-white">
+                        <AvatarFallback className="text-xs bg-accent/80 text-accent-foreground">
                           {channel.other_user.first_name
                             ? channel.other_user.first_name.charAt(0)
                             : channel.other_user.username?.charAt(0) || "U"}

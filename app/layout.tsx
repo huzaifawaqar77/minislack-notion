@@ -33,6 +33,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta name="color-scheme" content="light dark" />
+      </head>
       <body
         className={`${inter.variable} ${robotoMono.variable} font-sans antialiased`}
       >
@@ -40,7 +43,9 @@ export default function RootLayout({
           attribute="class"
           defaultTheme="system"
           enableSystem
+          enableColorScheme
           disableTransitionOnChange
+          storageKey="minislack-theme"
         >
           <AuthProvider>
             <WorkspaceProvider>

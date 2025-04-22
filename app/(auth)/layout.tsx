@@ -11,11 +11,11 @@ export default function AuthLayout({
   return (
     <div className="min-h-screen grid md:grid-cols-2">
       {/* Left side - Branding */}
-      <div className="hidden md:flex flex-col bg-emerald-600 dark:bg-emerald-800 text-white p-8 justify-between">
+      <div className="hidden md:flex flex-col bg-accent text-accent-foreground p-8 justify-between">
         <div>
           <Link href="/" className="flex items-center gap-2">
             <div className="bg-white rounded-full p-1">
-              <MessageSquare className="h-6 w-6 text-emerald-600" />
+              <MessageSquare className="h-6 w-6 text-accent" />
             </div>
             <span className="font-bold text-xl">MinSlack</span>
           </Link>
@@ -48,7 +48,7 @@ export default function AuthLayout({
         </div>
 
         <div className="mt-auto">
-          <p className="text-sm text-emerald-100">
+          <p className="text-sm opacity-80">
             &copy; 2024 MinSlack. All rights reserved.
           </p>
         </div>
@@ -58,8 +58,8 @@ export default function AuthLayout({
       <div className="flex flex-col">
         <div className="container flex h-16 items-center justify-between py-4 md:justify-end">
           <Link href="/" className="flex items-center md:hidden">
-            <div className="bg-emerald-600 rounded-full p-1">
-              <MessageSquare className="h-5 w-5 text-white" />
+            <div className="bg-accent rounded-full p-1">
+              <MessageSquare className="h-5 w-5 text-accent-foreground" />
             </div>
             <span className="font-bold ml-2">MinSlack</span>
           </Link>

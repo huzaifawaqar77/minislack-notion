@@ -20,7 +20,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className="flex-1 items-start">
         <aside
           className={cn(
-            "fixed top-[64px] bottom-0 z-30 hidden flex-col border-r bg-zinc-900 md:flex overflow-hidden",
+            "fixed top-[64px] bottom-0 z-30 hidden flex-col border-r bg-sidebar md:flex overflow-hidden",
             isCollapsed ? "md:w-[50px]" : "md:w-[220px] lg:w-[240px]"
           )}
         >
@@ -33,7 +33,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             >
               <ChevronLeft
                 className={cn(
-                  "h-4 w-4 transition-all text-zinc-400 hover:text-white",
+                  "h-4 w-4 transition-all text-sidebar-foreground/70 hover:text-sidebar-foreground",
                   isCollapsed && "rotate-180"
                 )}
               />
@@ -44,7 +44,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </aside>
         <div
           className={cn(
-            "flex w-full flex-col overflow-hidden bg-zinc-950",
+            "flex w-full flex-col overflow-hidden bg-background",
             isCollapsed ? "md:pl-[50px]" : "md:pl-[220px] lg:pl-[240px]"
           )}
         >
