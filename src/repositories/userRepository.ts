@@ -1,5 +1,4 @@
 import { db } from "../db/database";
-import { Users } from "../types/databaseTypes";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
@@ -205,6 +204,8 @@ export async function loginUser(
       username: user.username,
       first_name: user.first_name,
       last_name: user.last_name,
+      avatar_url: user.avatar_url,
+      email_verified: user.email_verified,
     },
   };
 }

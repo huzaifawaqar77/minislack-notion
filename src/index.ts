@@ -21,16 +21,30 @@ import InvitationRoutes from "./routes/invitationRoutes";
 import WebhookRoutes from "./routes/webhookRoutes";
 import AnalyticsRoutes from "./routes/analyticsRoutes";
 import OAuthRoutes from "./routes/oauthRoutes";
+import SecurityRoutes from "./routes/securityRoutes";
+import UserRoutes from "./routes/userRoutes";
+import DMRoutes from "./routes/dmRoutes";
 import { port, sessionSecret } from "./config/environment";
 import { detectDomain } from "./middleware/domainMiddleware";
 import { initializeSocketIO } from "./services/socketService";
 import { initializeOAuth } from "./services/oauthService";
+import {
+  securityHeaders,
+  securityEventLogger,
+  suspiciousActivityDetection,
+} from "./middleware/securityMiddleware";
+import { apiRateLimit, authRateLimit } from "./services/securityService";
 
 const app = express();
 const httpServer = createServer(app);
 
 // Initialize Socket.IO
 const io = initializeSocketIO(httpServer);
+
+// Export the Socket.IO instance
+export function getIO() {
+  return io;
+}
 
 // Initialize OAuth
 const passportInstance = initializeOAuth();
@@ -61,7 +75,22 @@ app.use((req, _res, next) => {
   next();
 });
 
-// 5. Request logging middleware
+// 5. Security headers middleware
+app.use(securityHeaders);
+
+// 6. Suspicious activity detection
+app.use(suspiciousActivityDetection);
+
+// 7. Security event logger
+app.use(securityEventLogger);
+
+// 8. API rate limiting
+app.use("/api/", apiRateLimit);
+
+// 9. Stricter rate limiting for auth routes
+app.use("/auth/", authRateLimit);
+
+// 10. Request logging middleware
 app.use((req, _res, next) => {
   // Log request details for debugging
   console.log(
@@ -70,7 +99,7 @@ app.use((req, _res, next) => {
   next();
 });
 
-// 6. Session middleware
+// 11. Session middleware
 app.use(
   session({
     secret: sessionSecret,
@@ -80,10 +109,10 @@ app.use(
   })
 );
 
-// 7. Initialize Passport
+// 12. Initialize Passport
 app.use(passportInstance.initialize());
 
-// 8. Serve static files from uploads directory
+// 13. Serve static files from uploads directory
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // Routes
@@ -101,7 +130,7 @@ app.use("/auth", VerificationRoutes);
 app.use("/organizations", OrganizationRoutes);
 
 // 5. Workspace Routes
-app.use("/", WorkspaceRoutes);
+app.use("/workspaces", WorkspaceRoutes);
 
 // 6. Channel Routes
 app.use("/", ChannelRoutes);
@@ -129,6 +158,15 @@ app.use("/", AnalyticsRoutes);
 
 // 14. OAuth Routes
 app.use("/auth", OAuthRoutes);
+
+// 15. Security Routes
+app.use("/security", SecurityRoutes);
+
+// 16. User Routes
+app.use("/users", UserRoutes);
+
+// 17. DM Routes
+app.use("/", DMRoutes);
 
 async function testConnection() {
   try {

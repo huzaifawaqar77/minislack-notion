@@ -3,8 +3,11 @@ dotenv.config({
   path: "./src/config/config.env",
 });
 
-// Base URL
-export const appUrl = process.env.APP_URL || "http://localhost:3000";
+// Base URL - This should be the frontend URL for email links
+export const appUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+
+// API URL - This is the backend URL
+export const apiUrl = process.env.APP_URL || "http://localhost:3001";
 
 // Server and Database
 export const port = process.env.PORT;
@@ -22,14 +25,14 @@ export const googleOAuth = {
   clientID: process.env.GOOGLE_CLIENT_ID || "",
   clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
   callbackURL:
-    process.env.GOOGLE_CALLBACK_URL || `${appUrl}/auth/google/callback`,
+    process.env.GOOGLE_CALLBACK_URL || `${apiUrl}/auth/google/callback`,
 };
 
 export const githubOAuth = {
   clientID: process.env.GITHUB_CLIENT_ID || "",
   clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
   callbackURL:
-    process.env.GITHUB_CALLBACK_URL || `${appUrl}/auth/github/callback`,
+    process.env.GITHUB_CALLBACK_URL || `${apiUrl}/auth/github/callback`,
 };
 
 // Email Configuration

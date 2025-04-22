@@ -2,6 +2,20 @@ import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import { jwtSecret } from "../config/environment";
 
+/**
+ * Generate a JWT token for a user
+ *
+ * @param user - The user object
+ * @returns The generated JWT token
+ */
+export function generateToken(user: any) {
+  return jwt.sign(
+    { id: user.id, email: user.email, username: user.username },
+    jwtSecret,
+    { expiresIn: "7d" }
+  );
+}
+
 export interface AuthenticatedRequest extends Request {
   user?: { id: string; email: string; username: string };
 }

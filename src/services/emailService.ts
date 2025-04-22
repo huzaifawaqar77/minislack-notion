@@ -137,9 +137,14 @@ export async function sendVerificationEmail(
   branding?: OrganizationBranding
 ): Promise<any> {
   // Import appUrl directly to ensure we get the correct value
-  const { appUrl } = require("../config/environment");
+  const { appUrl, apiUrl } = require("../config/environment");
 
-  const verificationUrl = `${appUrl}/auth/verify-email?token=${verificationToken}`;
+  console.log("Using frontend URL for verification:", appUrl);
+  console.log("Backend API URL:", apiUrl);
+
+  // Ensure the token is properly encoded for URLs
+  const encodedToken = encodeURIComponent(verificationToken);
+  const verificationUrl = `${appUrl}/auth/verify-email?token=${encodedToken}`;
 
   console.log("Creating verification email with URL:", verificationUrl);
 
@@ -192,9 +197,16 @@ export async function sendInvitationEmail(
   branding?: OrganizationBranding
 ): Promise<any> {
   // Import appUrl directly to ensure we get the correct value
-  const { appUrl } = require("../config/environment");
+  const { appUrl, apiUrl } = require("../config/environment");
 
-  const invitationUrl = `${appUrl}/invitations/accept?token=${token}`;
+  console.log("Using frontend URL for invitation:", appUrl);
+  console.log("Backend API URL:", apiUrl);
+
+  // Ensure the token is properly encoded for URLs
+  const encodedToken = encodeURIComponent(token);
+
+  // Use the shorter invite URL format
+  const invitationUrl = `${appUrl}/invite/${encodedToken}`;
 
   console.log("Creating invitation email with URL:", invitationUrl);
 
