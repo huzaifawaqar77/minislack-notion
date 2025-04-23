@@ -63,8 +63,9 @@ declare global {
 // 1. Enable CORS for all routes
 app.use(cors());
 
-// 2. middleware for reading request body
-app.use(express.json());
+// 2. middleware for reading request body with increased limit
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 // 3. Domain detection middleware
 app.use(detectDomain);
