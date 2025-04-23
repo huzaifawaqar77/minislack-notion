@@ -5,7 +5,8 @@ import { useParams } from "next/navigation";
 import { useAuth } from "@/contexts/auth-context";
 import { useChannel } from "@/contexts/channel-context";
 import { useWebSocket } from "@/contexts/websocket-context";
-import { channelApi, messageApi } from "@/lib/api";
+import { channelApi } from "@/lib/api";
+import { messageApi } from "@/lib/api/messageApi";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, MessageSquare } from "lucide-react";
@@ -434,9 +435,10 @@ export default function ChannelPage() {
                 is_pending: false,
                 // Update with any additional data from the server
                 ...response?.data,
-                // Keep the sender_id and sender_name to ensure proper display
+                // Keep the sender_id, sender_name, and avatar to ensure proper display
                 sender_id: user.id,
                 sender_name: user.firstName || user.username || "You",
+                sender_avatar: user.avatarUrl,
               }
             : msg
         )

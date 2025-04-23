@@ -127,7 +127,10 @@ export function DMList() {
                 <Avatar className="h-10 w-10 mr-3 flex-shrink-0">
                   <AvatarImage
                     src={
-                      channel.other_user.avatar_url || "/placeholder-user.jpg"
+                      process.env.NEXT_PUBLIC_API_URL +
+                        "/" +
+                        channel.other_user?.avatarUrl?.split("/public")[1] ||
+                      "/placeholder-user.jpg"
                     }
                     alt={channel.other_user.username || "User"}
                   />

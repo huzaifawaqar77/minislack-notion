@@ -37,6 +37,10 @@ export function DMSidebar({ isCollapsed = false }: DMSidebarProps) {
     if (!searchQuery) return true;
 
     const otherUser = channel.other_user;
+
+    console.log("================CHANNEL OTHER USER===================");
+    console.log(otherUser);
+
     const fullName = `${otherUser.first_name || ""} ${
       otherUser.last_name || ""
     }`.trim();
@@ -104,8 +108,11 @@ export function DMSidebar({ isCollapsed = false }: DMSidebarProps) {
                       <Avatar className="h-5 w-5">
                         <AvatarImage
                           src={
-                            channel.other_user.avatar_url ||
-                            "/placeholder-user.jpg"
+                            process.env.NEXT_PUBLIC_API_URL +
+                              "/" +
+                              channel.other_user.avatar_url?.split(
+                                "/public"
+                              )[1] || "/placeholder-user.jpg"
                           }
                           alt={channel.other_user.username || "User"}
                         />
@@ -129,8 +136,11 @@ export function DMSidebar({ isCollapsed = false }: DMSidebarProps) {
                       <Avatar className="h-5 w-5 mr-2">
                         <AvatarImage
                           src={
-                            channel.other_user.avatar_url ||
-                            "/placeholder-user.jpg"
+                            process.env.NEXT_PUBLIC_API_URL +
+                              "/" +
+                              channel.other_user.avatar_url?.split(
+                                "/public"
+                              )[1] || "/placeholder-user.jpg"
                           }
                           alt={channel.other_user.username || "User"}
                         />

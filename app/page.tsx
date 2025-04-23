@@ -6,8 +6,19 @@ import {
   MessageSquare,
   Users,
   Zap,
+  Lock,
+  BarChart,
+  Globe,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+import { SplitText } from "@/components/ui/reactbits/split-text";
+import { FeatureCard } from "@/components/ui/aceternity/feature-card";
+import { TestimonialCard } from "@/components/ui/aceternity/testimonial-card";
+import { PricingCard } from "@/components/ui/aceternity/pricing-card";
+import { AnimatedGradient } from "@/components/ui/aceternity/animated-gradient";
+import { MacBook } from "@/components/ui/aceternity/3d-macbook";
 
 export default function Home() {
   return (
@@ -45,7 +56,7 @@ export default function Home() {
               </Button>
             </Link>
             <Link href="/register">
-              <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700">
+              <Button size="sm" className="bg-amber-500 hover:bg-amber-600">
                 Get Started
               </Button>
             </Link>
@@ -54,24 +65,26 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-zinc-100 to-white dark:from-zinc-900 dark:to-zinc-950">
-        <div className="container px-4 md:px-6">
-          <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
+      <section className="w-full py-12 md:py-24 lg:py-32 bg-white dark:bg-zinc-950 border-b">
+        <div className="container px-4 md:px-6 mx-auto">
+          <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
+            {/* Left side - Text content */}
             <div className="flex flex-col justify-center space-y-4">
-              <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-emerald-600 dark:text-emerald-500">
-                  Modern Communication Platform for Teams
-                </h1>
-                <p className="max-w-[600px] text-zinc-700 dark:text-zinc-300 md:text-xl">
-                  Stay connected, organized, and productive with MinSlack. The
-                  all-in-one platform for team collaboration.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row">
+              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+                <span className="text-amber-500 dark:text-amber-400 block mb-2">
+                  Modern Communication
+                </span>
+                <span>Platform for Teams</span>
+              </h1>
+              <p className="text-lg text-zinc-700 dark:text-zinc-300 mt-4">
+                Stay connected, organized, and productive with MinSlack. The
+                all-in-one platform for team collaboration.
+              </p>
+              <div className="flex flex-col gap-2 min-[400px]:flex-row mt-6">
                 <Link href="/register">
                   <Button
                     size="lg"
-                    className="bg-emerald-600 hover:bg-emerald-700"
+                    className="bg-amber-500 hover:bg-amber-600 text-white"
                   >
                     Get Started
                   </Button>
@@ -83,14 +96,14 @@ export default function Home() {
                 </Link>
               </div>
             </div>
+
+            {/* Right side - MacBook */}
             <div className="flex items-center justify-center">
-              <div className="relative h-[350px] w-full overflow-hidden rounded-lg bg-zinc-200 dark:bg-zinc-800 sm:h-[400px] lg:h-[500px] shadow-lg">
-                <Image
-                  src="/dashboard-preview.png"
-                  alt="MinSlack Dashboard"
-                  fill
-                  className="object-cover"
-                  priority
+              <div className="w-full h-[400px] md:h-[450px] lg:h-[500px]">
+                <MacBook
+                  screenshotUrl="/dashboard-preview.png"
+                  altText="MinSlack Dashboard"
+                  className="w-full h-full"
                 />
               </div>
             </div>
@@ -101,50 +114,96 @@ export default function Home() {
       {/* Features Section */}
       <section
         id="features"
-        className="w-full py-12 md:py-24 lg:py-32 bg-white dark:bg-zinc-950"
+        className="w-full py-12 md:py-24 lg:py-32 bg-muted/30"
       >
         <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
+          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+            <div className="inline-block rounded-full bg-accent/10 px-3 py-1 text-sm font-medium text-accent mb-4">
+              Features
+            </div>
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-emerald-600 dark:text-emerald-500">
-                Powerful Features
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                <SplitText animation="slide-in" splitBy="words">
+                  Powerful Features for Modern Teams
+                </SplitText>
               </h2>
-              <p className="max-w-[900px] text-zinc-700 dark:text-zinc-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+              <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed mt-4">
                 Everything you need to keep your team connected and productive
               </p>
             </div>
           </div>
-          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-12">
-            <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm">
-              <div className="p-2 bg-emerald-100 dark:bg-emerald-900 rounded-full">
-                <MessageSquare className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-              </div>
-              <h3 className="text-xl font-bold">Real-time Messaging</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400 text-center">
-                Instant messaging with read receipts, reactions, and threaded
-                conversations.
+          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-12">
+            <FeatureCard
+              title="Real-time Messaging"
+              description="Instant messaging with read receipts, reactions, and threaded conversations."
+              icon={<MessageSquare className="h-6 w-6" />}
+            />
+            <FeatureCard
+              title="Team Workspaces"
+              description="Organize your team into workspaces with customizable permissions and channels."
+              icon={<Users className="h-6 w-6" />}
+            />
+            <FeatureCard
+              title="Advanced Security"
+              description="Enterprise-grade security with end-to-end encryption and compliance controls."
+              icon={<Lock className="h-6 w-6" />}
+            />
+            <FeatureCard
+              title="Powerful Integrations"
+              description="Connect with your favorite tools and services for a seamless workflow."
+              icon={<Zap className="h-6 w-6" />}
+            />
+            <FeatureCard
+              title="Analytics Dashboard"
+              description="Gain insights into team communication patterns and productivity metrics."
+              icon={<BarChart className="h-6 w-6" />}
+            />
+            <FeatureCard
+              title="Global Accessibility"
+              description="Access your workspace from anywhere with our mobile and desktop apps."
+              icon={<Globe className="h-6 w-6" />}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section
+        id="testimonials"
+        className="w-full py-12 md:py-24 lg:py-32 bg-background"
+      >
+        <div className="container px-4 md:px-6">
+          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+            <div className="inline-block rounded-full bg-accent/10 px-3 py-1 text-sm font-medium text-accent mb-4">
+              Testimonials
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                <SplitText animation="fade-up" splitBy="words">
+                  What Our Customers Say
+                </SplitText>
+              </h2>
+              <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed mt-4">
+                Join thousands of satisfied teams already using MinSlack
               </p>
             </div>
-            <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm">
-              <div className="p-2 bg-emerald-100 dark:bg-emerald-900 rounded-full">
-                <Users className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-              </div>
-              <h3 className="text-xl font-bold">Team Workspaces</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400 text-center">
-                Organize your team into workspaces with customizable permissions
-                and channels.
-              </p>
-            </div>
-            <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm">
-              <div className="p-2 bg-emerald-100 dark:bg-emerald-900 rounded-full">
-                <Zap className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-              </div>
-              <h3 className="text-xl font-bold">Integrations</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400 text-center">
-                Connect with your favorite tools and services for a seamless
-                workflow.
-              </p>
-            </div>
+          </div>
+          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-12">
+            <TestimonialCard
+              quote="MinSlack has transformed how our team communicates. The interface is intuitive and the features are exactly what we needed."
+              name="Sarah Johnson"
+              title="CTO, TechNova"
+            />
+            <TestimonialCard
+              quote="We've tried many collaboration tools, but MinSlack stands out with its seamless integrations and powerful workspace management."
+              name="Michael Chen"
+              title="Product Manager, Innovate Inc."
+            />
+            <TestimonialCard
+              quote="The security features in MinSlack give us peace of mind while maintaining an excellent user experience. Highly recommended!"
+              name="Jessica Williams"
+              title="Security Director, SecureFlow"
+            />
           </div>
         </div>
       </section>
@@ -152,167 +211,102 @@ export default function Home() {
       {/* Pricing Section */}
       <section
         id="pricing"
-        className="w-full py-12 md:py-24 lg:py-32 bg-zinc-50 dark:bg-zinc-900"
+        className="w-full py-12 md:py-24 lg:py-32 bg-muted/30"
       >
         <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
+          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+            <div className="inline-block rounded-full bg-accent/10 px-3 py-1 text-sm font-medium text-accent mb-4">
+              Pricing
+            </div>
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-emerald-600 dark:text-emerald-500">
-                Simple, Transparent Pricing
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                <SplitText animation="fade-up" splitBy="words">
+                  Simple, Transparent Pricing
+                </SplitText>
               </h2>
-              <p className="max-w-[900px] text-zinc-700 dark:text-zinc-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+              <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed mt-4">
                 Choose the plan that's right for your team
               </p>
             </div>
           </div>
-          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3 mt-12">
-            <div className="flex flex-col rounded-lg border bg-white dark:bg-zinc-950 shadow-sm overflow-hidden">
-              <div className="p-6 bg-zinc-100 dark:bg-zinc-800">
-                <h3 className="text-xl font-bold">Free</h3>
-                <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                  For small teams getting started
-                </p>
-                <div className="mt-4 flex items-baseline">
-                  <span className="text-3xl font-bold">$0</span>
-                  <span className="ml-1 text-sm text-zinc-600 dark:text-zinc-400">
-                    /month
-                  </span>
-                </div>
-              </div>
-              <div className="p-6 space-y-4">
-                <ul className="space-y-2">
-                  <li className="flex items-center">
-                    <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mr-2" />
-                    <span className="text-sm">Up to 10 users</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mr-2" />
-                    <span className="text-sm">5GB storage</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mr-2" />
-                    <span className="text-sm">Basic integrations</span>
-                  </li>
-                </ul>
-                <Link href="/register">
-                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
-                    Get Started
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            <div className="flex flex-col rounded-lg border bg-white dark:bg-zinc-950 shadow-sm overflow-hidden relative">
-              <div className="absolute top-0 right-0 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
-                POPULAR
-              </div>
-              <div className="p-6 bg-zinc-100 dark:bg-zinc-800">
-                <h3 className="text-xl font-bold">Pro</h3>
-                <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                  For growing teams
-                </p>
-                <div className="mt-4 flex items-baseline">
-                  <span className="text-3xl font-bold">$12</span>
-                  <span className="ml-1 text-sm text-zinc-600 dark:text-zinc-400">
-                    /user/month
-                  </span>
-                </div>
-              </div>
-              <div className="p-6 space-y-4">
-                <ul className="space-y-2">
-                  <li className="flex items-center">
-                    <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mr-2" />
-                    <span className="text-sm">Unlimited users</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mr-2" />
-                    <span className="text-sm">50GB storage</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mr-2" />
-                    <span className="text-sm">Advanced integrations</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mr-2" />
-                    <span className="text-sm">Priority support</span>
-                  </li>
-                </ul>
-                <Link href="/register">
-                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
-                    Get Started
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            <div className="flex flex-col rounded-lg border bg-white dark:bg-zinc-950 shadow-sm overflow-hidden">
-              <div className="p-6 bg-zinc-100 dark:bg-zinc-800">
-                <h3 className="text-xl font-bold">Enterprise</h3>
-                <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                  For large organizations
-                </p>
-                <div className="mt-4 flex items-baseline">
-                  <span className="text-3xl font-bold">Custom</span>
-                </div>
-              </div>
-              <div className="p-6 space-y-4">
-                <ul className="space-y-2">
-                  <li className="flex items-center">
-                    <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mr-2" />
-                    <span className="text-sm">Unlimited users</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mr-2" />
-                    <span className="text-sm">Unlimited storage</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mr-2" />
-                    <span className="text-sm">Custom integrations</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mr-2" />
-                    <span className="text-sm">Dedicated support</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mr-2" />
-                    <span className="text-sm">White labeling</span>
-                  </li>
-                </ul>
-                <Link href="/contact">
-                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
-                    Contact Sales
-                  </Button>
-                </Link>
-              </div>
-            </div>
+          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-3 mt-12">
+            <PricingCard
+              title="Free"
+              price="$0"
+              description="For small teams getting started"
+              features={[
+                { text: "Up to 10 users", included: true },
+                { text: "5GB storage", included: true },
+                { text: "Basic integrations", included: true },
+                { text: "Community support", included: true },
+                { text: "Advanced security", included: false },
+              ]}
+              buttonText="Get Started"
+              buttonLink="/register"
+            />
+            <PricingCard
+              title="Pro"
+              price="$12"
+              description="For growing teams"
+              features={[
+                { text: "Unlimited users", included: true },
+                { text: "50GB storage", included: true },
+                { text: "Advanced integrations", included: true },
+                { text: "Priority support", included: true },
+                { text: "Advanced security", included: true },
+              ]}
+              popular={true}
+              buttonText="Get Started"
+              buttonLink="/register"
+            />
+            <PricingCard
+              title="Enterprise"
+              price="Custom"
+              description="For large organizations"
+              features={[
+                { text: "Unlimited users", included: true },
+                { text: "Unlimited storage", included: true },
+                { text: "Custom integrations", included: true },
+                { text: "Dedicated support", included: true },
+                { text: "White labeling", included: true },
+              ]}
+              buttonText="Contact Sales"
+              buttonLink="/contact"
+            />
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-emerald-600 dark:bg-emerald-800">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-white">
-                Ready to transform your team's communication?
-              </h2>
-              <p className="max-w-[900px] text-zinc-100 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Join thousands of teams already using MinSlack to collaborate
-                better.
-              </p>
-            </div>
-            <div className="flex flex-col gap-2 min-[400px]:flex-row">
-              <Link href="/register">
-                <Button
-                  size="lg"
-                  className="bg-white text-emerald-600 hover:bg-zinc-100"
-                >
-                  Get Started Free
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+      <section className="w-full py-12 md:py-24 lg:py-32 overflow-hidden">
+        <AnimatedGradient>
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                  <SplitText animation="fade-up" splitBy="words">
+                    Ready to transform your team's communication?
+                  </SplitText>
+                </h2>
+                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed mt-4">
+                  Join thousands of teams already using MinSlack to collaborate
+                  better.
+                </p>
+              </div>
+              <div className="flex flex-col gap-2 min-[400px]:flex-row mt-8">
+                <Link href="/register">
+                  <Button
+                    size="lg"
+                    className="bg-accent text-accent-foreground hover:bg-accent/90 group"
+                  >
+                    Get Started Free
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
+        </AnimatedGradient>
       </section>
 
       {/* Footer */}
@@ -325,7 +319,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/#features"
-                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-500"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
                   >
                     Features
                   </Link>
@@ -333,7 +327,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/#pricing"
-                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-500"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
                   >
                     Pricing
                   </Link>
@@ -341,7 +335,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/integrations"
-                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-500"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
                   >
                     Integrations
                   </Link>
@@ -354,7 +348,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/about"
-                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-500"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
                   >
                     About
                   </Link>
@@ -362,7 +356,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/blog"
-                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-500"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
                   >
                     Blog
                   </Link>
@@ -370,7 +364,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/careers"
-                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-500"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
                   >
                     Careers
                   </Link>
@@ -383,7 +377,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/docs"
-                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-500"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
                   >
                     Documentation
                   </Link>
@@ -391,7 +385,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/help"
-                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-500"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
                   >
                     Help Center
                   </Link>
@@ -399,7 +393,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/community"
-                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-500"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
                   >
                     Community
                   </Link>
@@ -412,7 +406,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/privacy"
-                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-500"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
                   >
                     Privacy
                   </Link>
@@ -420,7 +414,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/terms"
-                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-500"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
                   >
                     Terms
                   </Link>
@@ -428,7 +422,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/security"
-                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-500"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
                   >
                     Security
                   </Link>
@@ -443,7 +437,7 @@ export default function Home() {
             <div className="flex space-x-4 mt-4 md:mt-0">
               <Link
                 href="#"
-                className="text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-500"
+                className="text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -462,7 +456,7 @@ export default function Home() {
               </Link>
               <Link
                 href="#"
-                className="text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-500"
+                className="text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -483,7 +477,7 @@ export default function Home() {
               </Link>
               <Link
                 href="#"
-                className="text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-500"
+                className="text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

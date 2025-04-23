@@ -736,7 +736,7 @@ export function DMConversation() {
       content: messageContent,
       sender_id: user?.id || "",
       sender_name: user?.firstName || user?.username || "You",
-      // Skip sender_avatar as it's optional
+      sender_avatar: user?.avatarUrl, // Include the user's avatar
       created_at: new Date().toISOString(),
       is_pending: true, // Mark as pending until confirmed by server
     };
@@ -825,9 +825,10 @@ export function DMConversation() {
                   is_pending: false,
                   // Update with any additional data from the server
                   ...response?.data,
-                  // Keep the sender_id and sender_name to ensure proper display
+                  // Keep the sender_id, sender_name, and avatar to ensure proper display
                   sender_id: user.id,
                   sender_name: user.firstName || user.username || "You",
+                  sender_avatar: user.avatarUrl,
                 }
               : msg
           );
@@ -966,7 +967,13 @@ export function DMConversation() {
         <div className="flex items-center">
           <Avatar className="h-8 w-8 mr-2">
             <AvatarImage
-              src={channel.other_user.avatar_url || "/placeholder-user.jpg"}
+              src={
+                channel.other_user?.avatar_url
+                  ? process.env.NEXT_PUBLIC_API_URL +
+                    "/" +
+                    channel.other_user?.avatar_url.split("/public")[1]
+                  : "/placeholder-user.jpg"
+              }
               alt={channel.other_user.username || "User"}
             />
             <AvatarFallback>

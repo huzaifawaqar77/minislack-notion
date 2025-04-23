@@ -1,0 +1,23 @@
+/* MacBook Animation */
+@keyframes float {
+  0% {
+    transform: translateY(0px) rotateX(2deg) rotateY(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotateX(4deg) rotateY(2deg);
+  }
+  100% {
+    transform: translateY(0px) rotateX(2deg) rotateY(0deg);
+  }
+}
+
+.macbook-float {
+  animation: float 6s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+
+/* Keyboard tilt */
+.keyboard-tilt {
+  transform: rotateX(45deg);
+  transform-origin: bottom;
+}

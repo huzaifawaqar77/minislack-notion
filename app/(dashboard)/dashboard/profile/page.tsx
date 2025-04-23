@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Loader2, Upload } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
-import { userApi } from "@/lib/api";
+import { userApi } from "@/lib/api/userApi";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -45,9 +45,11 @@ const profileFormSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user, refreshUserData, updateUserData } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -74,8 +76,16 @@ export default function ProfilePage() {
   async function onSubmit(data: ProfileFormValues) {
     setIsSaving(true);
     try {
-      await userApi.updateProfile(data);
-      toast.success("Profile updated successfully");
+      const response = await userApi.updateProfile(data);
+      if (response.status === "success" && response.data) {
+        // Update the user data in the auth context
+        updateUserData(response.data);
+        // Also refresh the user data from the server to ensure we have the latest
+        await refreshUserData();
+        toast.success("Profile updated successfully");
+      } else {
+        throw new Error(response.message || "Failed to update profile");
+      }
     } catch (error) {
       console.error("Failed to update profile:", error);
       toast.error(
@@ -87,6 +97,54 @@ export default function ProfilePage() {
       setIsSaving(false);
     }
   }
+
+  const handleAvatarUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    const validTypes = ["image/jpeg", "image/png", "image/gif"];
+    if (!validTypes.includes(file.type)) {
+      toast.error("Please upload a valid image file (JPG, PNG, or GIF)");
+      return;
+    }
+
+    // Validate file size (max 2MB)
+    const maxSize = 2 * 1024 * 1024; // 2MB
+    if (file.size > maxSize) {
+      toast.error("File size exceeds 2MB limit");
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+    try {
+      const response = await userApi.updateAvatar(file);
+      if (response.status === "success" && response.data) {
+        // Update the user data in the auth context
+        updateUserData(response.data);
+        // Also refresh the user data from the server to ensure we have the latest
+        await refreshUserData();
+        toast.success("Avatar updated successfully");
+      } else {
+        throw new Error(response.message || "Failed to update avatar");
+      }
+    } catch (error) {
+      console.error("Failed to update avatar:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to update avatar. Please try again."
+      );
+    } finally {
+      setIsUploadingAvatar(false);
+      // Reset the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
 
   if (!user) {
     return (
@@ -117,13 +175,20 @@ export default function ProfilePage() {
             <CardHeader>
               <CardTitle>Profile Picture</CardTitle>
               <CardDescription>
-                Update your profile picture. This will be displayed across the platform.
+                Update your profile picture. This will be displayed across the
+                platform.
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col items-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
               <Avatar className="h-24 w-24">
                 <AvatarImage
-                  src={user.avatarUrl || "/placeholder-user.jpg"}
+                  src={
+                    process.env.NEXT_PUBLIC_API_URL +
+                      "/" +
+                      user.avatarUrl?.split("/public")[1] ||
+                    "/placeholder-user.jpg"
+                  }
+                  className="h-full w-full object-cover"
                   alt={user.username}
                 />
                 <AvatarFallback className="text-lg">
@@ -131,9 +196,30 @@ export default function ProfilePage() {
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col space-y-2">
-                <Button variant="outline" className="w-full sm:w-auto">
-                  <Upload className="mr-2 h-4 w-4" />
-                  Upload New Picture
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/gif"
+                  className="hidden"
+                  ref={fileInputRef}
+                  onChange={handleAvatarUpload}
+                />
+                <Button
+                  variant="outline"
+                  className="w-full sm:w-auto"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploadingAvatar}
+                >
+                  {isUploadingAvatar ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="mr-2 h-4 w-4" />
+                      Upload New Picture
+                    </>
+                  )}
                 </Button>
                 <p className="text-xs text-muted-foreground">
                   JPG, GIF or PNG. Max size 2MB.
@@ -146,7 +232,8 @@ export default function ProfilePage() {
             <CardHeader>
               <CardTitle>Profile Information</CardTitle>
               <CardDescription>
-                Update your profile information. This information will be displayed publicly.
+                Update your profile information. This information will be
+                displayed publicly.
               </CardDescription>
             </CardHeader>
             <Form {...form}>
@@ -190,7 +277,8 @@ export default function ProfilePage() {
                           <Input placeholder="johndoe" {...field} />
                         </FormControl>
                         <FormDescription>
-                          This is your public display name. It can only contain letters, numbers, and underscores.
+                          This is your public display name. It can only contain
+                          letters, numbers, and underscores.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -203,10 +291,14 @@ export default function ProfilePage() {
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input placeholder="john.doe@example.com" {...field} />
+                          <Input
+                            placeholder="john.doe@example.com"
+                            {...field}
+                          />
                         </FormControl>
                         <FormDescription>
-                          This is the email address associated with your account.
+                          This is the email address associated with your
+                          account.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -238,20 +330,23 @@ export default function ProfilePage() {
             <CardHeader>
               <CardTitle>Password</CardTitle>
               <CardDescription>
-                Change your password. We recommend using a strong, unique password.
+                Change your password. We recommend using a strong, unique
+                password.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <FormLabel>Current Password</FormLabel>
+                <label className="text-sm font-medium">Current Password</label>
                 <Input type="password" placeholder="••••••••" />
               </div>
               <div className="space-y-2">
-                <FormLabel>New Password</FormLabel>
+                <label className="text-sm font-medium">New Password</label>
                 <Input type="password" placeholder="••••••••" />
               </div>
               <div className="space-y-2">
-                <FormLabel>Confirm New Password</FormLabel>
+                <label className="text-sm font-medium">
+                  Confirm New Password
+                </label>
                 <Input type="password" placeholder="••••••••" />
               </div>
             </CardContent>
@@ -264,7 +359,8 @@ export default function ProfilePage() {
             <CardHeader>
               <CardTitle>Two-Factor Authentication</CardTitle>
               <CardDescription>
-                Add an extra layer of security to your account by enabling two-factor authentication.
+                Add an extra layer of security to your account by enabling
+                two-factor authentication.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -286,24 +382,31 @@ export default function ProfilePage() {
             <CardHeader>
               <CardTitle>Appearance</CardTitle>
               <CardDescription>
-                Customize the appearance of the application. Choose between light and dark mode.
+                Customize the appearance of the application. Choose between
+                light and dark mode.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <FormLabel>Theme</FormLabel>
+                <label className="text-sm font-medium">Theme</label>
                 <div className="grid grid-cols-3 gap-4">
                   <div className="flex flex-col items-center space-y-2">
                     <div className="h-24 w-full rounded-md bg-white border"></div>
-                    <Button variant="outline" className="w-full">Light</Button>
+                    <Button variant="outline" className="w-full">
+                      Light
+                    </Button>
                   </div>
                   <div className="flex flex-col items-center space-y-2">
                     <div className="h-24 w-full rounded-md bg-zinc-950 border"></div>
-                    <Button variant="outline" className="w-full">Dark</Button>
+                    <Button variant="outline" className="w-full">
+                      Dark
+                    </Button>
                   </div>
                   <div className="flex flex-col items-center space-y-2">
                     <div className="h-24 w-full rounded-md bg-gradient-to-b from-white to-zinc-950 border"></div>
-                    <Button variant="outline" className="w-full">System</Button>
+                    <Button variant="outline" className="w-full">
+                      System
+                    </Button>
                   </div>
                 </div>
               </div>

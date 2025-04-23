@@ -1,0 +1,36 @@
+/* 3D MacBook Styles */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-3d {
+  transform-style: preserve-3d;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.rotate-x-90deg {
+  transform: rotateX(90deg);
+}
+
+.rotate-z-180deg {
+  transform: rotateZ(180deg);
+}
+
+.translate-z-2px {
+  transform: translateZ(2px);
+}
+
+.translate-z-10px {
+  transform: translateZ(10px);
+}
+
+.translate-z--10px {
+  transform: translateZ(-10px);
+}
+
+.origin-bottom {
+  transform-origin: bottom;
+}

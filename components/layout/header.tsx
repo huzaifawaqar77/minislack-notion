@@ -35,6 +35,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import Image from "next/image";
 
 export function Header() {
   const pathname = usePathname();
@@ -44,8 +45,10 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center">
         <div className="mr-4 hidden md:flex">
-          <Link href="/" className="mr-6 flex items-center space-x-2">
-            <span className="hidden font-bold sm:inline-block">MinSlack</span>
+          <Link href="/" className="mx-6 flex items-center space-x-2">
+            <span className="hidden font-bold sm:inline-block text-accent">
+              UIFlexer
+            </span>
           </Link>
           <NavigationMenu>
             <NavigationMenuList>
@@ -214,7 +217,13 @@ export function Header() {
                     >
                       <Avatar className="h-8 w-8">
                         <AvatarImage
-                          src={user?.profileImage || "/placeholder-user.jpg"}
+                          src={
+                            process.env.NEXT_PUBLIC_API_URL +
+                              "/" +
+                              user?.avatarUrl?.split("/public")[1] ||
+                            "/placeholder-user.jpg"
+                          }
+                          className="h-full w-full object-cover"
                           alt={user?.username || "User"}
                         />
                         <AvatarFallback>

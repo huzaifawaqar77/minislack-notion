@@ -183,7 +183,7 @@ export const userApi = {
   // Get user profile
   getProfile: async () => {
     try {
-      const response = await api.get("/users/me");
+      const response = await api.get("/auth/me");
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -209,7 +209,7 @@ export const userApi = {
         email: profileData.email,
       };
 
-      const response = await api.put("/users/me", requestData);
+      const response = await api.put("/auth/me", requestData);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

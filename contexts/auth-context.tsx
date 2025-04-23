@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { authApi } from "@/lib/api";
+import { userApi } from "@/lib/api/userApi";
 import { useRouter } from "next/navigation";
 
 interface User {
@@ -10,6 +11,7 @@ interface User {
   email: string;
   firstName?: string;
   lastName?: string;
+  avatarUrl?: string;
 }
 
 interface AuthContextType {
@@ -35,6 +37,8 @@ interface AuthContextType {
     redirectTo?: string
   ) => Promise<void>;
   logout: () => void;
+  refreshUserData: () => Promise<void>;
+  updateUserData: (userData: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -141,6 +145,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.push("/login");
   };
 
+  const refreshUserData = async () => {
+    try {
+      const response = await userApi.getProfile();
+      if (response && response.status === "success" && response.data) {
+        setUser(response.data);
+        // Update localStorage
+        localStorage.setItem("user", JSON.stringify(response.data));
+        return response.data;
+      }
+    } catch (error) {
+      console.error("Failed to refresh user data:", error);
+    }
+    return null;
+  };
+
+  const updateUserData = (userData: Partial<User>) => {
+    if (user) {
+      const updatedUser = { ...user, ...userData };
+      setUser(updatedUser);
+      // Update localStorage
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -151,6 +179,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         login,
         register,
         logout,
+        refreshUserData,
+        updateUserData,
       }}
     >
       {children}

@@ -56,18 +56,18 @@
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  /* Green accent color from the provided image */
-  --accent: oklch(0.55 0.15 145); /* Medium green */
+  /* Amberish orange accent color with neon-like vibe */
+  --accent: oklch(0.65 0.25 60); /* Vibrant amber orange */
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
-  /* Green chart colors from the provided image */
-  --chart-1: oklch(0.75 0.1 145); /* Light green */
-  --chart-2: oklch(0.65 0.12 145); /* Medium-light green */
-  --chart-3: oklch(0.55 0.15 145); /* Medium green */
-  --chart-4: oklch(0.45 0.12 145); /* Medium-dark green */
+  /* Amber orange chart colors */
+  --chart-1: oklch(0.75 0.15 60); /* Lightest amber */
+  --chart-2: oklch(0.65 0.2 60); /* Light amber */
+  --chart-3: oklch(0.55 0.25 60); /* Medium amber */
+  --chart-4: oklch(0.45 0.22 60); /* Dark amber */
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
@@ -92,19 +92,19 @@
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
-  /* Dark mode green accent color */
-  --accent: oklch(0.45 0.12 145); /* Medium-dark green */
+  /* Dark mode amberish orange accent color */
+  --accent: oklch(0.55 0.22 60); /* Darker amber orange */
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
-  /* Dark mode green chart colors */
-  --chart-1: oklch(0.35 0.1 145); /* Darkest green */
-  --chart-2: oklch(0.45 0.12 145); /* Medium-dark green */
-  --chart-3: oklch(0.55 0.15 145); /* Medium green */
-  --chart-4: oklch(0.65 0.12 145); /* Medium-light green */
-  --chart-5: oklch(0.645 0.246 16.439);
+  /* Dark mode amber orange chart colors */
+  --chart-1: oklch(0.35 0.15 60); /* Darkest amber */
+  --chart-2: oklch(0.45 0.18 60); /* Dark amber */
+  --chart-3: oklch(0.55 0.22 60); /* Medium amber */
+  --chart-4: oklch(0.65 0.18 60); /* Light amber */
+  --chart-5: oklch(0.645 0.246 60);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
@@ -131,4 +131,50 @@
 
 .animation-delay-500 {
   animation-delay: 500ms;
+}
+
+/* 3D Transformation Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-3d {
+  transform-style: preserve-3d;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.rotate-x-\[90deg\] {
+  transform: rotateX(90deg);
+}
+
+.rotate-z-\[180deg\] {
+  transform: rotateZ(180deg);
+}
+
+.translate-z-\[2px\] {
+  transform: translateZ(2px);
+}
+
+.translate-z-\[10px\] {
+  transform: translateZ(10px);
+}
+
+.translate-z-\[-10px\] {
+  transform: translateZ(-10px);
+}
+
+/* MacBook Animation */
+@keyframes float {
+  0% {
+    transform: translateY(0px) rotateX(2deg) rotateY(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotateX(4deg) rotateY(2deg);
+  }
+  100% {
+    transform: translateY(0px) rotateX(2deg) rotateY(0deg);
+  }
 }
