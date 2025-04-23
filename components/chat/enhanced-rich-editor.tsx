@@ -11,6 +11,8 @@ import Highlight from "@tiptap/extension-highlight";
 import Image from "@tiptap/extension-image";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
+import { toast } from "sonner";
+import { getApiUrl } from "@/lib/api/apiUtils";
 import { common, createLowlight } from "lowlight";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 
@@ -191,18 +193,81 @@ export function EnhancedRichEditor({
   };
 
   // Handle image upload
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (!file || !editor) return;
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const result = e.target?.result;
-      if (typeof result === "string") {
-        editor.chain().focus().setImage({ src: result }).run();
+    // Check file size (limit to 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image size must be less than 5MB");
+      return;
+    }
+
+    try {
+      // Show loading indicator
+      toast.loading("Uploading image...");
+
+      // Create FormData to send the file
+      const formData = new FormData();
+      formData.append("file", file);
+
+      // Get the current workspace ID from the URL
+      // For DMs, we need to use a valid workspace ID
+      let workspaceId;
+
+      // Check if we're in a DM or channel context
+      const pathParts = window.location.pathname.split("/");
+      if (pathParts[1] === "dashboard" && pathParts[2] === "dm") {
+        // For DMs, we'll use the user's default workspace
+        // This is a workaround - in a real app, you might want to store this in state or context
+        workspaceId =
+          localStorage.getItem("default_workspace_id") ||
+          "7c29fe01-8f0a-48e6-aaca-195cf7ff51ee";
+      } else {
+        // For regular channels, use the workspace ID from the URL
+        workspaceId = pathParts[2];
       }
-    };
-    reader.readAsDataURL(file);
+
+      // Fallback to a default workspace ID if none is found
+      if (!workspaceId || workspaceId === "dm") {
+        workspaceId = "7c29fe01-8f0a-48e6-aaca-195cf7ff51ee";
+      }
+
+      // Upload the file to the server
+      const response = await fetch(
+        getApiUrl(`/workspaces/${workspaceId}/files`),
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            // Don't set Content-Type header when using FormData
+            // The browser will set it automatically with the correct boundary
+            Authorization: `Bearer ${localStorage.getItem("auth_token") || ""}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to upload image");
+      }
+
+      const data = await response.json();
+
+      // Use the URL of the uploaded file
+      const imageUrl = `${getApiUrl("/uploads")}/${data.data.file_path}`;
+
+      // Insert the image into the editor
+      editor.chain().focus().setImage({ src: imageUrl }).run();
+
+      toast.dismiss();
+      toast.success("Image uploaded successfully");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.dismiss();
+      toast.error("Failed to upload image");
+    }
 
     // Reset the file input
     if (fileInputRef.current) {
