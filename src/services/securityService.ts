@@ -320,10 +320,25 @@ export function detectSuspiciousActivity(
     /((\%3C)|<)((\%69)|i|(\%49))((\%6D)|m|(\%4D))((\%67)|g|(\%47))[^\n]+((\%3E)|>)/i,
   ];
 
+  // Special handling for message content
+  let bodyToCheck = req.body;
+
+  // If this is a message creation endpoint, exclude the content field from XSS checks
+  if (
+    req.path.includes("/messages") &&
+    req.method === "POST" &&
+    req.body?.content
+  ) {
+    // Create a copy of the body without the content field for security checks
+    const { content, ...bodyWithoutContent } = req.body;
+    bodyToCheck = bodyWithoutContent;
+  }
+
   // Check request for suspicious patterns
   const isSuspicious = [...sqlInjectionPatterns, ...xssPatterns].some(
     (pattern) =>
-      pattern.test(queryString) || pattern.test(JSON.stringify(req.body || {}))
+      pattern.test(queryString) ||
+      pattern.test(JSON.stringify(bodyToCheck || {}))
   );
 
   if (isSuspicious) {

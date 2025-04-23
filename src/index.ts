@@ -115,6 +115,9 @@ app.use(passportInstance.initialize());
 // 13. Serve static files from uploads directory
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
+// 14. Serve static files from public directory
+app.use(express.static(path.join(process.cwd(), "public")));
+
 // Routes
 
 // 1. Auth Routes
