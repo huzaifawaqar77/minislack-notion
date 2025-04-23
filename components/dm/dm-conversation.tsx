@@ -11,7 +11,7 @@ import { Loader2 } from "lucide-react";
 // We're using our own time formatting function instead of formatDistanceToNow
 import { toast } from "sonner";
 import { ChatInput } from "@/components/chat/chat-input";
-import { MessageRenderer } from "@/components/chat/message-renderer";
+import { EnhancedMessageRenderer } from "@/components/chat/enhanced-message-renderer";
 
 interface Message {
   id: string;
@@ -1068,7 +1068,7 @@ export function DMConversation() {
                         {message.content || "No content"} (sending...)
                       </p>
                     ) : (
-                      <MessageRenderer
+                      <EnhancedMessageRenderer
                         content={message.content || "No content"}
                       />
                     )}

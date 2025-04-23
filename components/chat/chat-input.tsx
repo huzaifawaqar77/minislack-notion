@@ -2,8 +2,9 @@
 
 import React, { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
+import { EnhancedRichEditor } from "./enhanced-rich-editor";
+// Keep the SimpleRichEditor import for backward compatibility
 import { SimpleRichEditor } from "./simple-rich-editor";
-import { htmlToText } from "@/lib/html-to-text";
 
 interface ChatInputProps {
   onSendMessage: (content: string) => Promise<void>;
@@ -28,9 +29,8 @@ export function ChatInput({
 
       try {
         setIsSending(true);
-        // Convert HTML content to plain text before sending
-        const plainTextContent = htmlToText(content);
-        await onSendMessage(plainTextContent);
+        // Send the HTML content directly - we'll render it properly
+        await onSendMessage(content);
       } catch (error) {
         console.error("Failed to send message:", error);
         throw error; // Re-throw to let the editor component handle it
@@ -43,11 +43,12 @@ export function ChatInput({
 
   return (
     <div className={cn("p-2", className)}>
-      <SimpleRichEditor
+      <EnhancedRichEditor
         placeholder={placeholder}
         onSend={handleSend}
         disabled={disabled || isSending}
         className="bg-white dark:bg-zinc-900"
+        onTyping={onTyping}
       />
     </div>
   );
