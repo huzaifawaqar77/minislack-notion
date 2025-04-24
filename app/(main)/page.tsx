@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { MessageSquare, Users, Lock, Zap } from "lucide-react";
 
 export default function HomePage() {
@@ -16,12 +22,15 @@ export default function HomePage() {
                   Modern Communication Platform for Teams
                 </h1>
                 <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                  Stay connected, organized, and productive with MinSlack. The all-in-one platform for team collaboration.
+                  Stay connected, organized, and productive with MinSlack. The
+                  all-in-one platform for team collaboration.
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
                 <Link href="/register">
-                  <Button size="lg" className="w-full">Get Started</Button>
+                  <Button size="lg" className="w-full">
+                    Get Started
+                  </Button>
                 </Link>
                 <Link href="/features">
                   <Button size="lg" variant="outline" className="w-full">
@@ -46,12 +55,15 @@ export default function HomePage() {
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
-              <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Features</div>
+              <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">
+                Features
+              </div>
               <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
                 Everything You Need
               </h2>
               <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                MinSlack provides all the tools your team needs to communicate effectively and stay productive.
+                MinSlack provides all the tools your team needs to communicate
+                effectively and stay productive.
               </p>
             </div>
           </div>
@@ -63,7 +75,8 @@ export default function HomePage() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Communicate with your team in real-time with instant messaging and thread replies.
+                  Communicate with your team in real-time with instant messaging
+                  and thread replies.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -74,7 +87,8 @@ export default function HomePage() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Create channels for different teams, projects, or topics to keep conversations organized.
+                  Create channels for different teams, projects, or topics to
+                  keep conversations organized.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -85,7 +99,8 @@ export default function HomePage() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Advanced security features to keep your team's communications safe and compliant.
+                  Advanced security features to keep your team's communications
+                  safe and compliant.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -96,7 +111,8 @@ export default function HomePage() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Connect with your favorite tools and services to streamline your workflow.
+                  Connect with your favorite tools and services to streamline
+                  your workflow.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -109,7 +125,9 @@ export default function HomePage() {
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
-              <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Testimonials</div>
+              <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">
+                Testimonials
+              </div>
               <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
                 Trusted by Teams Worldwide
               </h2>
@@ -125,13 +143,16 @@ export default function HomePage() {
                   <div className="h-10 w-10 rounded-full bg-muted"></div>
                   <div>
                     <CardTitle className="text-lg">Sarah Johnson</CardTitle>
-                    <CardDescription>Marketing Director, Acme Inc.</CardDescription>
+                    <CardDescription>
+                      Marketing Director, Acme Inc.
+                    </CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  "MinSlack has transformed how our marketing team collaborates. We're more efficient and aligned than ever before."
+                  "MinSlack has transformed how our marketing team collaborates.
+                  We're more efficient and aligned than ever before."
                 </p>
               </CardContent>
             </Card>
@@ -147,7 +168,8 @@ export default function HomePage() {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  "The security features in MinSlack give us peace of mind when discussing sensitive product information."
+                  "The security features in MinSlack give us peace of mind when
+                  discussing sensitive product information."
                 </p>
               </CardContent>
             </Card>
@@ -157,13 +179,16 @@ export default function HomePage() {
                   <div className="h-10 w-10 rounded-full bg-muted"></div>
                   <div>
                     <CardTitle className="text-lg">Emily Rodriguez</CardTitle>
-                    <CardDescription>Team Lead, Global Solutions</CardDescription>
+                    <CardDescription>
+                      Team Lead, Global Solutions
+                    </CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  "Managing a remote team became so much easier with MinSlack. It's like we're all in the same room."
+                  "Managing a remote team became so much easier with MinSlack.
+                  It's like we're all in the same room."
                 </p>
               </CardContent>
             </Card>
@@ -180,7 +205,8 @@ export default function HomePage() {
                 Ready to Transform Your Team Communication?
               </h2>
               <p className="mx-auto max-w-[700px] text-primary-foreground/80 md:text-xl">
-                Join thousands of teams already using MinSlack to collaborate more effectively.
+                Join thousands of teams already using MinSlack to collaborate
+                more effectively.
               </p>
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -190,7 +216,11 @@ export default function HomePage() {
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button size="lg" variant="outline" className="w-full border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10"
+                >
                   Contact Sales
                 </Button>
               </Link>

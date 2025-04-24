@@ -19,12 +19,14 @@ import { TestimonialCard } from "@/components/ui/aceternity/testimonial-card";
 import { PricingCard } from "@/components/ui/aceternity/pricing-card";
 import { AnimatedGradient } from "@/components/ui/aceternity/animated-gradient";
 import { MacBook } from "@/components/ui/aceternity/3d-macbook";
+import { BackgroundBeams } from "@/components/ui/aceternity/background-beams";
+import { AuthStepsCard } from "@/components/ui/aceternity/auth-steps-card";
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex items-center justify-center">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="font-bold text-xl">MinSlack</span>
@@ -65,18 +67,35 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-white dark:bg-zinc-950 border-b">
-        <div className="container px-4 md:px-6 mx-auto">
+      <section className="w-full py-12 md:py-24 lg:py-32 bg-white dark:bg-zinc-950 border-b relative overflow-hidden">
+        {/* Background Beams Effect */}
+        <BackgroundBeams
+          beamColor="#f59e0b"
+          gridSize={12}
+          beamCount={15}
+          beamOpacity={0.6}
+          beamLength={300}
+          beamWidth={1.5}
+          beamSpeed={0.007}
+          className="z-0"
+        />
+
+        {/* Subtle overlay to improve text readability */}
+        <div className="absolute inset-0 bg-white/80 dark:bg-zinc-950/80 z-10"></div>
+
+        <div className="container px-4 md:px-6 mx-auto relative z-20">
           <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
             {/* Left side - Text content */}
             <div className="flex flex-col justify-center space-y-4">
               <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                <span className="text-amber-500 dark:text-amber-400 block mb-2">
+                <span className="text-amber-500 dark:text-amber-400 block mb-2 drop-shadow-sm">
                   Modern Communication
                 </span>
-                <span>Platform for Teams</span>
+                <span className="text-zinc-800 dark:text-zinc-100">
+                  Platform for Teams
+                </span>
               </h1>
-              <p className="text-lg text-zinc-700 dark:text-zinc-300 mt-4">
+              <p className="text-lg text-zinc-700 dark:text-zinc-300 mt-4 max-w-xl">
                 Stay connected, organized, and productive with MinSlack. The
                 all-in-one platform for team collaboration.
               </p>
@@ -84,13 +103,17 @@ export default function Home() {
                 <Link href="/register">
                   <Button
                     size="lg"
-                    className="bg-amber-500 hover:bg-amber-600 text-white"
+                    className="bg-amber-500 hover:bg-amber-600 text-white shadow-lg shadow-amber-500/20 hover:shadow-amber-600/30 transition-all duration-300"
                   >
                     Get Started
                   </Button>
                 </Link>
                 <Link href="/#features">
-                  <Button size="lg" variant="outline">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="border-zinc-300 dark:border-zinc-700"
+                  >
                     Learn More
                   </Button>
                 </Link>
@@ -99,11 +122,13 @@ export default function Home() {
 
             {/* Right side - MacBook */}
             <div className="flex items-center justify-center">
-              <div className="w-full h-[400px] md:h-[450px] lg:h-[500px]">
+              <div className="w-full h-[400px] md:h-[450px] lg:h-[500px] relative">
+                {/* Add a subtle glow behind the MacBook */}
+                <div className="absolute inset-0 bg-amber-500/10 dark:bg-amber-500/20 blur-3xl rounded-full transform scale-90 translate-y-4"></div>
                 <MacBook
                   screenshotUrl="/dashboard-preview.png"
                   altText="MinSlack Dashboard"
-                  className="w-full h-full"
+                  className="w-full h-full relative z-10 p-4"
                 />
               </div>
             </div>
@@ -114,9 +139,12 @@ export default function Home() {
       {/* Features Section */}
       <section
         id="features"
-        className="w-full py-12 md:py-24 lg:py-32 bg-muted/30"
+        className="w-full py-12 md:py-24 lg:py-32 bg-muted/30 relative overflow-hidden flex items-center justify-center"
       >
-        <div className="container px-4 md:px-6">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 bg-[radial-gradient(#f59e0b_0.5px,transparent_0.5px)] [background-size:24px_24px] opacity-5"></div>
+
+        <div className="container px-4 md:px-6 relative z-10">
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
             <div className="inline-block rounded-full bg-accent/10 px-3 py-1 text-sm font-medium text-accent mb-4">
               Features
@@ -132,36 +160,43 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-12">
+
+          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 mt-16">
             <FeatureCard
               title="Real-time Messaging"
               description="Instant messaging with read receipts, reactions, and threaded conversations."
-              icon={<MessageSquare className="h-6 w-6" />}
+              icon={<MessageSquare className="h-7 w-7" />}
+              className="h-full"
             />
             <FeatureCard
               title="Team Workspaces"
               description="Organize your team into workspaces with customizable permissions and channels."
-              icon={<Users className="h-6 w-6" />}
+              icon={<Users className="h-7 w-7" />}
+              className="h-full"
             />
             <FeatureCard
               title="Advanced Security"
               description="Enterprise-grade security with end-to-end encryption and compliance controls."
-              icon={<Lock className="h-6 w-6" />}
+              icon={<Lock className="h-7 w-7" />}
+              className="h-full"
             />
             <FeatureCard
               title="Powerful Integrations"
               description="Connect with your favorite tools and services for a seamless workflow."
-              icon={<Zap className="h-6 w-6" />}
+              icon={<Zap className="h-7 w-7" />}
+              className="h-full"
             />
             <FeatureCard
               title="Analytics Dashboard"
               description="Gain insights into team communication patterns and productivity metrics."
-              icon={<BarChart className="h-6 w-6" />}
+              icon={<BarChart className="h-7 w-7" />}
+              className="h-full"
             />
             <FeatureCard
               title="Global Accessibility"
               description="Access your workspace from anywhere with our mobile and desktop apps."
-              icon={<Globe className="h-6 w-6" />}
+              icon={<Globe className="h-7 w-7" />}
+              className="h-full"
             />
           </div>
         </div>
@@ -170,7 +205,7 @@ export default function Home() {
       {/* Testimonials Section */}
       <section
         id="testimonials"
-        className="w-full py-12 md:py-24 lg:py-32 bg-background"
+        className="w-full py-12 md:py-24 lg:py-32 bg-background flex items-center justify-center"
       >
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
@@ -211,7 +246,7 @@ export default function Home() {
       {/* Pricing Section */}
       <section
         id="pricing"
-        className="w-full py-12 md:py-24 lg:py-32 bg-muted/30"
+        className="w-full py-12 md:py-24 lg:py-32 bg-muted/30 flex items-center justify-center"
       >
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
@@ -277,40 +312,127 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Authentication Steps Section */}
+      <section className="w-full py-16 md:py-24 lg:py-32 bg-white dark:bg-zinc-950 border-b relative overflow-hidden flex items-center justify-center">
+        <div className="absolute inset-0 bg-[radial-gradient(#f59e0b_0.5px,transparent_0.5px)] [background-size:24px_24px] opacity-5"></div>
+
+        <div className="container px-4 md:px-6 relative z-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="flex-1 max-w-xl">
+              <div className="inline-block rounded-full bg-accent/10 px-3 py-1 text-sm font-medium text-accent mb-4">
+                Secure Authentication
+              </div>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-6">
+                <SplitText animation="slide-in" splitBy="words">
+                  Simple and Secure Setup
+                </SplitText>
+              </h2>
+              <p className="text-muted-foreground text-lg mb-8">
+                Our authentication process is designed to be straightforward
+                while maintaining the highest security standards. Follow these
+                simple steps to get started with MinSlack.
+              </p>
+              <Link href="/register">
+                <Button
+                  size="lg"
+                  className="bg-amber-500 hover:bg-amber-600 text-white font-medium shadow-lg shadow-amber-500/20 hover:shadow-amber-600/30 transition-all duration-300 group"
+                >
+                  Create Your Account
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
+            </div>
+
+            <div className="flex-1 flex justify-center">
+              <AuthStepsCard
+                title="Authentication steps"
+                description="Follow these steps to secure your account:"
+                steps={[
+                  { text: "Enter your email address" },
+                  { text: "Create a strong password" },
+                  { text: "Set up two-factor authentication" },
+                  { text: "Verify your identity" },
+                ]}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
-      <section className="w-full py-12 md:py-24 lg:py-32 overflow-hidden">
-        <AnimatedGradient>
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+      <section className="w-full py-16 md:py-24 lg:py-32 overflow-hidden relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-zinc-50/50 to-white/50 dark:from-zinc-900/50 dark:to-zinc-950/50 z-0"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] dark:bg-[radial-gradient(#3f3f46_1px,transparent_1px)] opacity-25 z-0"></div>
+
+        <div className="container relative z-10 px-4 md:px-6 mx-auto">
+          <div className="max-w-4xl mx-auto bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-xl border border-zinc-200/50 dark:border-zinc-800/50">
+            <div className="flex flex-col items-center justify-center space-y-6 text-center">
+              <div className="inline-block px-4 py-1.5 mb-2 text-sm font-medium rounded-full bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700">
+                <span className="flex items-center gap-1.5">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                  </span>
+                  Limited time offer: 50% off for teams
+                </span>
+              </div>
+
+              <div className="space-y-4">
+                <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl text-zinc-800 dark:text-zinc-100">
                   <SplitText animation="fade-up" splitBy="words">
                     Ready to transform your team's communication?
                   </SplitText>
                 </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed mt-4">
-                  Join thousands of teams already using MinSlack to collaborate
-                  better.
+
+                <p className="max-w-[800px] mx-auto text-zinc-600 dark:text-zinc-300 text-lg md:text-xl/relaxed mt-4">
+                  Join thousands of innovative teams already using MinSlack to
+                  collaborate more effectively and drive productivity.
                 </p>
               </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row mt-8">
-                <Link href="/register">
+
+              <div className="flex flex-col sm:flex-row gap-4 mt-6 w-full max-w-md mx-auto">
+                <Link href="/register" className="w-full sm:w-auto">
                   <Button
                     size="lg"
-                    className="bg-accent text-accent-foreground hover:bg-accent/90 group"
+                    className="w-full bg-amber-500 hover:bg-amber-600 text-white font-medium shadow-lg shadow-amber-500/20 hover:shadow-amber-600/30 transition-all duration-300 group"
                   >
-                    Get Started Free
+                    Start Free Trial
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </Link>
+
+                <Link href="/demo" className="w-full sm:w-auto">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all duration-300"
+                  >
+                    Book a Demo
+                  </Button>
+                </Link>
+              </div>
+
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-zinc-500 dark:text-zinc-400">
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-amber-500" />
+                  No credit card required
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-amber-500" />
+                  14-day free trial
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-amber-500" />
+                  Cancel anytime
+                </div>
               </div>
             </div>
           </div>
-        </AnimatedGradient>
+        </div>
       </section>
 
       {/* Footer */}
-      <footer className="w-full py-6 bg-zinc-100 dark:bg-zinc-900">
+      <footer className="w-full py-6 bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center">
         <div className="container px-4 md:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="space-y-4">

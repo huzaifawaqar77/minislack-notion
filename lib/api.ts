@@ -5,7 +5,9 @@ export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001",
   headers: {
     "Content-Type": "application/json",
+    "X-Requested-With": "XMLHttpRequest",
   },
+  withCredentials: true, // Include cookies in requests
 });
 
 // Add a request interceptor to include the auth token in requests

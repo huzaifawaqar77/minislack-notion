@@ -19,14 +19,15 @@ export const getApiUrl = (endpoint: string): string => {
 export const getAuthHeaders = (): Record<string, string> => {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
+    "X-Requested-With": "XMLHttpRequest",
   };
-  
+
   if (typeof window !== "undefined") {
     const token = localStorage.getItem("auth_token");
     if (token) {
       headers["Authorization"] = `Bearer ${token}`;
     }
   }
-  
+
   return headers;
 };

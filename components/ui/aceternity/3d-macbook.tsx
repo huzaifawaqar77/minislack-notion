@@ -23,7 +23,7 @@ export function MacBook({
           {/* Screen Bezel */}
           <div className="absolute inset-[3%] bg-zinc-900 rounded-lg">
             {/* Screen */}
-            <div className="absolute inset-[2%] overflow-hidden rounded-md bg-black">
+            <div className="absolute overflow-hidden rounded-md bg-black">
               {/* Screenshot */}
               <div className="relative w-full h-full">
                 <Image
