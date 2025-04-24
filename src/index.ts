@@ -24,6 +24,7 @@ import OAuthRoutes from "./routes/oauthRoutes";
 import SecurityRoutes from "./routes/securityRoutes";
 import UserRoutes from "./routes/userRoutes";
 import DMRoutes from "./routes/dmRoutes";
+import DashboardRoutes from "./routes/dashboardRoutes";
 import { port, sessionSecret } from "./config/environment";
 import { detectDomain } from "./middleware/domainMiddleware";
 import { initializeSocketIO } from "./services/socketService";
@@ -60,8 +61,15 @@ declare global {
 
 // middlewares
 
-// 1. Enable CORS for all routes
-app.use(cors());
+// 1. Enable CORS for all routes with specific configuration
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3000", // Allow the frontend origin
+    credentials: true, // Allow credentials (cookies, authorization headers)
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed methods
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"], // Allowed headers
+  })
+);
 
 // 2. middleware for reading request body with increased limit
 app.use(express.json({ limit: "10mb" }));
@@ -171,6 +179,9 @@ app.use("/users", UserRoutes);
 
 // 17. DM Routes
 app.use("/", DMRoutes);
+
+// 18. Dashboard Routes
+app.use("/", DashboardRoutes);
 
 async function testConnection() {
   try {
