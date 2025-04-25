@@ -9,17 +9,18 @@ export interface CreateNotificationInput {
   userId: string;
   type: string;
   title: string;
-  message: string;
+  content: string; // Changed from message to content to match the database schema
   data?: any;
   workspaceId?: string;
   channelId?: string;
   messageId?: string;
   senderId?: string;
+  actionUrl?: string;
 }
 
 /**
  * Creates a new notification
- * 
+ *
  * @param input - Notification creation input
  * @returns The created notification
  */
@@ -31,15 +32,14 @@ export async function createNotification(input: CreateNotificationInput) {
       user_id: input.userId,
       type: input.type,
       title: input.title,
-      message: input.message,
-      data: input.data ? JSON.stringify(input.data) : null,
+      content: input.content, // Changed from message to content
+      action_url: input.actionUrl || null, // Added action_url field
       workspace_id: input.workspaceId || null,
       channel_id: input.channelId || null,
       message_id: input.messageId || null,
       sender_id: input.senderId || null,
       is_read: false,
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
     })
     .returningAll()
     .executeTakeFirstOrThrow();
@@ -47,7 +47,7 @@ export async function createNotification(input: CreateNotificationInput) {
 
 /**
  * Gets a notification by ID
- * 
+ *
  * @param id - The ID of the notification
  * @returns The notification or null if not found
  */
@@ -61,7 +61,7 @@ export async function getNotificationById(id: string) {
 
 /**
  * Gets all notifications for a user
- * 
+ *
  * @param userId - The ID of the user
  * @param limit - Maximum number of notifications to return
  * @param offset - Offset for pagination
@@ -81,8 +81,8 @@ export async function getUserNotifications(
       "notifications.id",
       "notifications.type",
       "notifications.title",
-      "notifications.message",
-      "notifications.data",
+      "notifications.content", // Changed from message to content
+      "notifications.action_url", // Added action_url
       "notifications.workspace_id",
       "notifications.channel_id",
       "notifications.message_id",
@@ -95,11 +95,11 @@ export async function getUserNotifications(
       "sender.avatar_url as sender_avatar_url",
     ])
     .where("notifications.user_id", "=", userId);
-  
+
   if (unreadOnly) {
     query = query.where("notifications.is_read", "=", false);
   }
-  
+
   return query
     .orderBy("notifications.created_at", "desc")
     .limit(limit)
@@ -109,39 +109,39 @@ export async function getUserNotifications(
 
 /**
  * Gets the count of unread notifications for a user
- * 
+ *
  * @param userId - The ID of the user
  * @returns The count of unread notifications
  */
 export async function getUnreadNotificationCount(userId: string) {
   const result = await db
     .selectFrom("notifications")
-    .select(eb => eb.fn.count<number>("id").as("count"))
+    .select((eb) => eb.fn.count<number>("id").as("count"))
     .where("user_id", "=", userId)
     .where("is_read", "=", false)
     .executeTakeFirst();
-  
-  return parseInt(result?.count as any || "0");
+
+  return parseInt((result?.count as any) || "0");
 }
 
 /**
  * Marks a notification as read
- * 
+ *
  * @param id - The ID of the notification
  * @param userId - The ID of the user
  * @returns The updated notification
  */
 export async function markNotificationAsRead(id: string, userId: string) {
   const notification = await getNotificationById(id);
-  
+
   if (!notification) {
     throw new Error(`Notification with ID '${id}' not found`);
   }
-  
+
   if (notification.user_id !== userId) {
     throw new Error("You don't have permission to update this notification");
   }
-  
+
   return db
     .updateTable("notifications")
     .set({
@@ -155,7 +155,7 @@ export async function markNotificationAsRead(id: string, userId: string) {
 
 /**
  * Marks all notifications as read for a user
- * 
+ *
  * @param userId - The ID of the user
  * @returns The number of notifications marked as read
  */
@@ -164,44 +164,41 @@ export async function markAllNotificationsAsRead(userId: string) {
     .updateTable("notifications")
     .set({
       is_read: true,
-      updated_at: new Date().toISOString(),
+      // Remove the updated_at field as it doesn't exist in the current schema
     })
     .where("user_id", "=", userId)
     .where("is_read", "=", false)
     .executeTakeFirst();
-  
+
   return result;
 }
 
 /**
  * Deletes a notification
- * 
+ *
  * @param id - The ID of the notification
  * @param userId - The ID of the user
  * @returns True if successful
  */
 export async function deleteNotification(id: string, userId: string) {
   const notification = await getNotificationById(id);
-  
+
   if (!notification) {
     throw new Error(`Notification with ID '${id}' not found`);
   }
-  
+
   if (notification.user_id !== userId) {
     throw new Error("You don't have permission to delete this notification");
   }
-  
-  await db
-    .deleteFrom("notifications")
-    .where("id", "=", id)
-    .execute();
-  
+
+  await db.deleteFrom("notifications").where("id", "=", id).execute();
+
   return true;
 }
 
 /**
  * Creates a mention notification
- * 
+ *
  * @param mentionedUserId - The ID of the mentioned user
  * @param messageId - The ID of the message
  * @param channelId - The ID of the channel
@@ -223,29 +220,30 @@ export async function createMentionNotification(
 ) {
   // Check if user is a member of the workspace
   const isMember = await isWorkspaceMember(workspaceId, mentionedUserId);
-  
+
   if (!isMember) {
     throw new Error("User is not a member of this workspace");
   }
-  
+
   return createNotification({
     userId: mentionedUserId,
     type: "mention",
     title: "New Mention",
-    message: `${senderName} mentioned you in #${channelName}`,
+    content: `${senderName} mentioned you in #${channelName}`, // Changed from message to content
     data: {
-      messagePreview
+      messagePreview,
     },
+    actionUrl: `/dashboard/channels/${channelId}`, // Added action URL
     workspaceId,
     channelId,
     messageId,
-    senderId
+    senderId,
   });
 }
 
 /**
  * Creates a channel invitation notification
- * 
+ *
  * @param invitedUserId - The ID of the invited user
  * @param channelId - The ID of the channel
  * @param workspaceId - The ID of the workspace
@@ -266,16 +264,17 @@ export async function createChannelInviteNotification(
     userId: invitedUserId,
     type: "channel_invite",
     title: "Channel Invitation",
-    message: `${inviterName} added you to #${channelName}`,
+    content: `${inviterName} added you to #${channelName}`, // Changed from message to content
+    actionUrl: `/dashboard/channels/${channelId}`, // Added action URL
     workspaceId,
     channelId,
-    senderId: inviterId
+    senderId: inviterId,
   });
 }
 
 /**
  * Creates a workspace invitation notification
- * 
+ *
  * @param invitedUserId - The ID of the invited user
  * @param workspaceId - The ID of the workspace
  * @param inviterId - The ID of the inviter
@@ -294,8 +293,9 @@ export async function createWorkspaceInviteNotification(
     userId: invitedUserId,
     type: "workspace_invite",
     title: "Workspace Invitation",
-    message: `${inviterName} added you to ${workspaceName}`,
+    content: `${inviterName} added you to ${workspaceName}`, // Changed from message to content
+    actionUrl: `/dashboard/workspaces/${workspaceId}`, // Added action URL
     workspaceId,
-    senderId: inviterId
+    senderId: inviterId,
   });
 }

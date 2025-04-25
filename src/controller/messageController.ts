@@ -1,8 +1,10 @@
 import { Response } from "express";
 import { AuthenticatedRequest } from "../middleware/authMiddleware";
 import * as messageRepository from "../repositories/messageRepository";
+import * as userRepository from "../repositories/userRepository";
 import { emitToChannel } from "../services/socketService";
 import { getIO } from "../index";
+import * as notificationService from "../services/notificationService";
 
 /**
  * Creates a new message
@@ -68,6 +70,48 @@ export async function createMessageController(
       is_direct: isDirect, // Add is_direct flag for DM channels
       type: "message",
     };
+
+    // Process mentions in the message content
+    if (content) {
+      // Extract mentions using regex - matches @username or @firstName.lastName
+      const mentionRegex = /@(\w+(?:\.\w+)?)/g;
+      const mentions = content.match(mentionRegex);
+
+      if (mentions && mentions.length > 0) {
+        // Get unique mentions
+        const uniqueMentions = [...new Set(mentions)];
+
+        // Process each mention
+        for (const mention of uniqueMentions) {
+          // Remove the @ symbol
+          const username = mention.substring(1);
+
+          try {
+            // Find the user by username
+            const mentionedUser =
+              await userRepository.getUserByUsername(username);
+
+            if (mentionedUser && mentionedUser.id !== req.user.id) {
+              // Create a mention notification
+              await notificationService.createMentionNotification(
+                mentionedUser.id,
+                req.user.id,
+                channel.workspace_id,
+                channelId,
+                message.id,
+                content
+              );
+
+              console.log(
+                `Created mention notification for user ${mentionedUser.id}`
+              );
+            }
+          } catch (error) {
+            console.error(`Error processing mention for ${username}:`, error);
+          }
+        }
+      }
+    }
 
     // Emit the message to all users in the channel
     const io = getIO();

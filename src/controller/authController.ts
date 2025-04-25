@@ -96,7 +96,7 @@ export async function loginController(req: Request, res: Response) {
 }
 
 export const registerController = async (req: DomainRequest, res: Response) => {
-  const { email, username, password, firstName, lastName } = req.body;
+  const { email, username, password, firstName, lastName, timezone } = req.body;
 
   console.log(req.body, "request ");
   if (!username || !password || !email || !firstName || !lastName) {
@@ -143,7 +143,8 @@ export const registerController = async (req: DomainRequest, res: Response) => {
       lastName,
       true, // Send verification email
       organizationId,
-      branding
+      branding,
+      timezone
     );
 
     // Generate CSRF token for the new user

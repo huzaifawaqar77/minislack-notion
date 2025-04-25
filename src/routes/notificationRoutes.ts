@@ -1,48 +1,66 @@
 import express, { Router, Response } from "express";
-import { authenticateToken, AuthenticatedRequest } from "../middleware/authMiddleware";
+import {
+  authenticateToken,
+  AuthenticatedRequest,
+} from "../middleware/authMiddleware";
 import {
   getUserNotificationsController,
   getUnreadNotificationCountController,
   markNotificationAsReadController,
   markAllNotificationsAsReadController,
-  deleteNotificationController
+  deleteNotificationController,
+  createTestNotificationController,
 } from "../controller/notificationController";
 
 const router: Router = express.Router();
 
 // Notification routes
-router.get("/notifications", 
-  authenticateToken, 
+router.get(
+  "/notifications",
+  authenticateToken,
   async (req: AuthenticatedRequest, res: Response) => {
     await getUserNotificationsController(req, res);
   }
 );
 
-router.get("/notifications/unread/count", 
-  authenticateToken, 
+router.get(
+  "/notifications/unread/count",
+  authenticateToken,
   async (req: AuthenticatedRequest, res: Response) => {
     await getUnreadNotificationCountController(req, res);
   }
 );
 
-router.put("/notifications/:notificationId/read", 
-  authenticateToken, 
+router.put(
+  "/notifications/:notificationId/read",
+  authenticateToken,
   async (req: AuthenticatedRequest, res: Response) => {
     await markNotificationAsReadController(req, res);
   }
 );
 
-router.put("/notifications/read-all", 
-  authenticateToken, 
+router.put(
+  "/notifications/read-all",
+  authenticateToken,
   async (req: AuthenticatedRequest, res: Response) => {
     await markAllNotificationsAsReadController(req, res);
   }
 );
 
-router.delete("/notifications/:notificationId", 
-  authenticateToken, 
+router.delete(
+  "/notifications/:notificationId",
+  authenticateToken,
   async (req: AuthenticatedRequest, res: Response) => {
     await deleteNotificationController(req, res);
+  }
+);
+
+// Test notification route
+router.post(
+  "/notifications/test",
+  authenticateToken,
+  async (req: AuthenticatedRequest, res: Response) => {
+    await createTestNotificationController(req, res);
   }
 );
 

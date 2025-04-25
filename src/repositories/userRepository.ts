@@ -18,7 +18,8 @@ export async function registerUser(
   lastName: string,
   sendVerificationEmailFlag: boolean = true,
   organizationId?: string,
-  branding?: OrganizationBranding
+  branding?: OrganizationBranding,
+  timezone?: string
 ) {
   console.log(
     email,
@@ -58,6 +59,7 @@ export async function registerUser(
       created_at: new Date().toISOString(),
       email_verified: false,
       is_admin: false,
+      timezone: timezone ?? null,
     })
     .returningAll()
     .executeTakeFirstOrThrow();
@@ -115,6 +117,7 @@ export async function registerUser(
     username: newUser.username,
     created_at: newUser.created_at,
     email_verified: newUser.email_verified,
+    timezone: newUser.timezone,
   };
 }
 
@@ -140,6 +143,7 @@ export async function getUserById(id: string) {
       "created_at",
       "last_active",
       "is_admin",
+      "timezone",
     ])
     .where("id", "=", id)
     .executeTakeFirst();
@@ -206,6 +210,7 @@ export async function loginUser(
       last_name: user.last_name,
       avatar_url: user.avatar_url,
       email_verified: user.email_verified,
+      timezone: user.timezone,
     },
   };
 }

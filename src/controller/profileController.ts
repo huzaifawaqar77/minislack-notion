@@ -32,6 +32,7 @@ export async function getProfileController(
         "last_active",
         "status",
         "email_verified",
+        "timezone",
       ])
       .where("id", "=", req.user.id)
       .executeTakeFirst();
@@ -57,6 +58,7 @@ export async function getProfileController(
         lastLoginAt: user.last_active,
         status: user.status || "offline",
         emailVerified: user.email_verified,
+        timezone: user.timezone,
       },
     });
   } catch (error) {
@@ -83,7 +85,7 @@ export async function updateProfileController(
       });
     }
 
-    const { firstName, lastName, username, email } = req.body;
+    const { firstName, lastName, username, email, timezone } = req.body;
 
     // Validate input
     if (username && username.length < 3) {
@@ -131,6 +133,7 @@ export async function updateProfileController(
         last_name: lastName !== undefined ? lastName : undefined,
         username: username !== undefined ? username : undefined,
         email: email !== undefined ? email : undefined,
+        timezone: timezone !== undefined ? timezone : undefined,
         updated_at: new Date().toISOString(),
       })
       .where("id", "=", req.user.id)
@@ -146,6 +149,7 @@ export async function updateProfileController(
         "last_active",
         "status",
         "email_verified",
+        "timezone",
       ])
       .executeTakeFirst();
 
@@ -167,6 +171,7 @@ export async function updateProfileController(
         lastLoginAt: updatedUser.last_active,
         status: updatedUser.status || "offline",
         emailVerified: updatedUser.email_verified,
+        timezone: updatedUser.timezone,
       },
     });
   } catch (error) {

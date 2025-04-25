@@ -96,6 +96,10 @@ export function initializeSocketIO(httpServer: HttpServer): SocketIOServer {
       return;
     }
 
+    // Join the user's personal room for direct notifications
+    socket.join(`user:${userId}`);
+    console.log(`User ${userId} joined personal room: user:${userId}`);
+
     // Initialize user connection
     const connection: UserConnection = {
       userId,

@@ -1,6 +1,7 @@
 import { Response } from "express";
 import { AuthenticatedRequest } from "../middleware/authMiddleware";
 import * as dmRepository from "../repositories/dmRepository";
+import * as notificationService from "../services/notificationService";
 
 /**
  * Creates a new DM channel or returns an existing one
@@ -45,6 +46,17 @@ export async function createOrGetDMChannelController(
         channel_id: channel.id,
         created_by: req.user.id,
       });
+
+      // Create a notification for the recipient
+      await notificationService.createSystemNotification(
+        userId,
+        "New Direct Message",
+        `You have a new direct message conversation`,
+        {
+          channelId: channel.id,
+          senderId: req.user.id,
+        }
+      );
     }
 
     return res.status(200).json({

@@ -5,16 +5,11 @@
 
 import type { ColumnType } from "kysely";
 
-export type Generated<T> =
-  T extends ColumnType<infer S, infer I, infer U>
-    ? ColumnType<S, I | undefined, U>
-    : ColumnType<T, T | undefined, T>;
+export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
+  ? ColumnType<S, I | undefined, U>
+  : ColumnType<T, T | undefined, T>;
 
-export type Int8 = ColumnType<
-  string,
-  bigint | number | string,
-  bigint | number | string
->;
+export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
 
 export type Json = JsonValue;
 
@@ -92,6 +87,14 @@ export interface CodeSnippets {
   workspace_id: string | null;
 }
 
+export interface CsrfTokens {
+  created_at: Timestamp;
+  expires_at: Timestamp;
+  id: Generated<string>;
+  token: string;
+  user_id: string | null;
+}
+
 export interface DocumentCollaborators {
   created_at: Generated<Timestamp | null>;
   cursor_position: Json | null;
@@ -141,6 +144,13 @@ export interface Documents {
   version: Generated<number | null>;
   view_count: Generated<number | null>;
   workspace_id: string | null;
+}
+
+export interface FailedLoginAttempts {
+  attempted_at: Timestamp;
+  id: Generated<string>;
+  ip_hash: string;
+  username_or_email: string;
 }
 
 export interface FilePermissions {
@@ -271,6 +281,61 @@ export interface Notifications {
   workspace_id: string | null;
 }
 
+export interface OrganizationDomains {
+  created_at: Generated<Timestamp | null>;
+  domain: string;
+  id: Generated<string>;
+  is_primary: Generated<boolean | null>;
+  is_verified: Generated<boolean | null>;
+  organization_id: string;
+  updated_at: Generated<Timestamp | null>;
+  verification_token: string | null;
+  verified_at: Timestamp | null;
+}
+
+export interface Organizations {
+  created_at: Generated<Timestamp | null>;
+  created_by: string | null;
+  deleted_at: Timestamp | null;
+  description: string | null;
+  favicon_url: string | null;
+  id: Generated<string>;
+  is_active: Generated<boolean | null>;
+  logo_url: string | null;
+  max_users_per_workspace: number | null;
+  max_workspaces: number | null;
+  name: string;
+  primary_color: Generated<string | null>;
+  secondary_color: Generated<string | null>;
+  slug: string;
+  updated_at: Generated<Timestamp | null>;
+}
+
+export interface OrganizationSettings {
+  allow_public_signup: Generated<boolean | null>;
+  created_at: Generated<Timestamp | null>;
+  custom_css: string | null;
+  custom_js: string | null;
+  email_from_name: string | null;
+  email_template: Generated<string | null>;
+  id: Generated<string>;
+  organization_id: string;
+  require_email_verification: Generated<boolean | null>;
+  updated_at: Generated<Timestamp | null>;
+}
+
+export interface SecurityEvents {
+  created_at: Timestamp;
+  event_type: string;
+  id: Generated<string>;
+  ip_address: string | null;
+  request_data: Json | null;
+  request_method: string | null;
+  request_path: string | null;
+  user_agent: string | null;
+  user_id: string | null;
+}
+
 export interface TaggableItems {
   created_at: Generated<Timestamp | null>;
   created_by: string | null;
@@ -298,10 +363,20 @@ export interface Users {
   email: string;
   email_verified: Generated<boolean | null>;
   first_name: string | null;
+  /**
+   * GitHub OAuth ID
+   */
+  github_id: string | null;
+  /**
+   * Google OAuth ID
+   */
+  google_id: string | null;
   id: Generated<string>;
   is_admin: Generated<boolean | null>;
+  is_online: Generated<boolean | null>;
   last_active: Timestamp | null;
   last_name: string | null;
+  last_seen: Timestamp | null;
   locale: string | null;
   password_hash: string;
   phone: string | null;
@@ -325,6 +400,17 @@ export interface UserSessions {
   user_id: string | null;
 }
 
+export interface VerificationTokens {
+  created_at: Generated<Timestamp | null>;
+  expires_at: Timestamp;
+  id: Generated<string>;
+  is_used: Generated<boolean | null>;
+  token: string;
+  type: string;
+  used_at: Timestamp | null;
+  user_id: string | null;
+}
+
 export interface Webhooks {
   created_at: Generated<Timestamp | null>;
   created_by: string | null;
@@ -338,58 +424,18 @@ export interface Webhooks {
   workspace_id: string | null;
 }
 
-export interface VerificationTokens {
-  id: Generated<string>;
-  user_id: string | null;
-  token: string | null;
-  type: string | null;
+export interface WorkspaceInvitations {
   created_at: Generated<Timestamp | null>;
-  expires_at: Timestamp | null;
-  is_used: Generated<boolean | null>;
-  used_at: Timestamp | null;
-}
-
-export interface Organizations {
+  email: string;
+  expires_at: Timestamp;
   id: Generated<string>;
-  name: string;
-  slug: string;
-  description: string | null;
-  logo_url: string | null;
-  favicon_url: string | null;
-  primary_color: string | null;
-  secondary_color: string | null;
-  created_by: string | null;
-  is_active: Generated<boolean | null>;
-  max_workspaces: number | null;
-  max_users_per_workspace: number | null;
-  created_at: Generated<Timestamp | null>;
+  invited_by: string;
+  message: string | null;
+  role: Generated<string | null>;
+  status: Generated<string | null>;
+  token: string;
   updated_at: Generated<Timestamp | null>;
-  deleted_at: Timestamp | null;
-}
-
-export interface OrganizationDomains {
-  id: Generated<string>;
-  organization_id: string;
-  domain: string;
-  is_primary: Generated<boolean | null>;
-  is_verified: Generated<boolean | null>;
-  verification_token: string | null;
-  verified_at: Timestamp | null;
-  created_at: Generated<Timestamp | null>;
-  updated_at: Generated<Timestamp | null>;
-}
-
-export interface OrganizationSettings {
-  id: Generated<string>;
-  organization_id: string;
-  email_from_name: string | null;
-  email_template: string | null;
-  custom_css: string | null;
-  custom_js: string | null;
-  allow_public_signup: Generated<boolean | null>;
-  require_email_verification: Generated<boolean | null>;
-  created_at: Generated<Timestamp | null>;
-  updated_at: Generated<Timestamp | null>;
+  workspace_id: string;
 }
 
 export interface WorkspaceMembers {
@@ -424,15 +470,17 @@ export interface Workspaces {
   updated_at: Generated<Timestamp | null>;
 }
 
-export interface Database {
+export interface DB {
   audit_logs: AuditLogs;
   channel_members: ChannelMembers;
   channels: Channels;
   code_snippets: CodeSnippets;
+  csrf_tokens: CsrfTokens;
   document_collaborators: DocumentCollaborators;
   document_history: DocumentHistory;
   document_permissions: DocumentPermissions;
   documents: Documents;
+  failed_login_attempts: FailedLoginAttempts;
   file_permissions: FilePermissions;
   files: Files;
   meeting_participants: MeetingParticipants;
@@ -444,12 +492,14 @@ export interface Database {
   organization_domains: OrganizationDomains;
   organization_settings: OrganizationSettings;
   organizations: Organizations;
+  security_events: SecurityEvents;
   taggable_items: TaggableItems;
   tags: Tags;
   user_sessions: UserSessions;
   users: Users;
   verification_tokens: VerificationTokens;
   webhooks: Webhooks;
+  workspace_invitations: WorkspaceInvitations;
   workspace_members: WorkspaceMembers;
   workspaces: Workspaces;
 }
