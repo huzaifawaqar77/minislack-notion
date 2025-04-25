@@ -5,11 +5,16 @@
 
 import type { ColumnType } from "kysely";
 
-export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
-  ? ColumnType<S, I | undefined, U>
-  : ColumnType<T, T | undefined, T>;
+export type Generated<T> =
+  T extends ColumnType<infer S, infer I, infer U>
+    ? ColumnType<S, I | undefined, U>
+    : ColumnType<T, T | undefined, T>;
 
-export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
+export type Int8 = ColumnType<
+  string,
+  bigint | number | string,
+  bigint | number | string
+>;
 
 export type Json = JsonValue;
 
@@ -324,6 +329,103 @@ export interface OrganizationSettings {
   updated_at: Generated<Timestamp | null>;
 }
 
+export interface ProjectFiles {
+  created_at: Generated<Timestamp | null>;
+  file_id: string;
+  id: Generated<string>;
+  project_id: string;
+  uploaded_by: string;
+}
+
+export interface ProjectMembers {
+  created_at: Generated<Timestamp | null>;
+  id: Generated<string>;
+  invited_by: string | null;
+  joined_at: Generated<Timestamp | null>;
+  project_id: string;
+  role: Generated<string>;
+  updated_at: Generated<Timestamp | null>;
+  user_id: string;
+}
+
+export interface Projects {
+  created_at: Generated<Timestamp | null>;
+  created_by: string;
+  deleted_at: Timestamp | null;
+  description: string | null;
+  id: Generated<string>;
+  image_url: string | null;
+  is_archived: Generated<boolean | null>;
+  is_public: Generated<boolean | null>;
+  name: string;
+  slug: string;
+  updated_at: Generated<Timestamp | null>;
+  workspace_id: string;
+}
+
+export interface ProjectTaskActivity {
+  action: string;
+  created_at: Generated<Timestamp | null>;
+  details: Json | null;
+  id: Generated<string>;
+  task_id: string;
+  user_id: string;
+}
+
+export interface ProjectTaskAttachments {
+  created_at: Generated<Timestamp | null>;
+  file_id: string;
+  id: Generated<string>;
+  task_id: string;
+  uploaded_by: string;
+}
+
+export interface ProjectTaskComments {
+  content: string;
+  created_at: Generated<Timestamp | null>;
+  deleted_at: Timestamp | null;
+  id: Generated<string>;
+  task_id: string;
+  updated_at: Generated<Timestamp | null>;
+  user_id: string;
+}
+
+export interface ProjectTaskLabelAssignments {
+  created_at: Generated<Timestamp | null>;
+  id: Generated<string>;
+  label_id: string;
+  task_id: string;
+}
+
+export interface ProjectTaskLabels {
+  color: Generated<string>;
+  created_at: Generated<Timestamp | null>;
+  created_by: string;
+  id: Generated<string>;
+  name: string;
+  project_id: string;
+  updated_at: Generated<Timestamp | null>;
+}
+
+export interface ProjectTasks {
+  assigned_to: string | null;
+  completed_at: Timestamp | null;
+  created_at: Generated<Timestamp | null>;
+  created_by: string;
+  deleted_at: Timestamp | null;
+  description: string | null;
+  due_date: Timestamp | null;
+  id: Generated<string>;
+  is_archived: Generated<boolean | null>;
+  parent_id: string | null;
+  position: Generated<number | null>;
+  priority: Generated<string | null>;
+  project_id: string;
+  status: Generated<string>;
+  title: string;
+  updated_at: Generated<Timestamp | null>;
+}
+
 export interface SecurityEvents {
   created_at: Timestamp;
   event_type: string;
@@ -492,6 +594,15 @@ export interface DB {
   organization_domains: OrganizationDomains;
   organization_settings: OrganizationSettings;
   organizations: Organizations;
+  project_files: ProjectFiles;
+  project_members: ProjectMembers;
+  project_task_activity: ProjectTaskActivity;
+  project_task_attachments: ProjectTaskAttachments;
+  project_task_comments: ProjectTaskComments;
+  project_task_label_assignments: ProjectTaskLabelAssignments;
+  project_task_labels: ProjectTaskLabels;
+  project_tasks: ProjectTasks;
+  projects: Projects;
   security_events: SecurityEvents;
   taggable_items: TaggableItems;
   tags: Tags;

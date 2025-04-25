@@ -25,6 +25,7 @@ import SecurityRoutes from "./routes/securityRoutes";
 import UserRoutes from "./routes/userRoutes";
 import DMRoutes from "./routes/dmRoutes";
 import DashboardRoutes from "./routes/dashboardRoutes";
+import ProjectRoutes from "./routes/projectRoutes";
 import { port, sessionSecret } from "./config/environment";
 import { detectDomain } from "./middleware/domainMiddleware";
 import { initializeSocketIO } from "./services/socketService";
@@ -182,6 +183,9 @@ app.use("/", DMRoutes);
 
 // 18. Dashboard Routes
 app.use("/", DashboardRoutes);
+
+// 19. Project Routes
+app.use("/projects", ProjectRoutes);
 
 async function testConnection() {
   try {
