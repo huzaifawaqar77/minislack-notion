@@ -30,7 +30,33 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
+
+// Common timezones
+const commonTimezones = [
+  "UTC",
+  "America/New_York",
+  "America/Chicago",
+  "America/Denver",
+  "America/Los_Angeles",
+  "Europe/London",
+  "Europe/Paris",
+  "Europe/Berlin",
+  "Asia/Tokyo",
+  "Asia/Shanghai",
+  "Asia/Kolkata",
+  "Asia/Dubai",
+  "Asia/Karachi",
+  "Australia/Sydney",
+  "Pacific/Auckland",
+];
 
 const profileFormSchema = z.object({
   username: z
@@ -40,6 +66,7 @@ const profileFormSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
+  timezone: z.string().optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -51,6 +78,16 @@ export default function ProfilePage() {
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Get user's timezone
+  const [userTimezone, setUserTimezone] = useState<string>(() => {
+    try {
+      return Intl.DateTimeFormat().resolvedOptions().timeZone;
+    } catch (error) {
+      console.error("Failed to get timezone:", error);
+      return "UTC";
+    }
+  });
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
@@ -58,6 +95,7 @@ export default function ProfilePage() {
       email: "",
       firstName: "",
       lastName: "",
+      timezone: userTimezone,
     },
     mode: "onChange",
   });
@@ -69,9 +107,10 @@ export default function ProfilePage() {
         email: user.email || "",
         firstName: user.firstName || "",
         lastName: user.lastName || "",
+        timezone: user.timezone || userTimezone,
       });
     }
-  }, [user, form]);
+  }, [user, form, userTimezone]);
 
   async function onSubmit(data: ProfileFormValues) {
     setIsSaving(true);
@@ -299,6 +338,38 @@ export default function ProfilePage() {
                         <FormDescription>
                           This is the email address associated with your
                           account.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="timezone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Timezone</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select your timezone" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {commonTimezones.map((timezone) => (
+                              <SelectItem key={timezone} value={timezone}>
+                                {timezone.replace("_", " ")}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormDescription>
+                          Your timezone will be used to display dates and times
+                          correctly.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>

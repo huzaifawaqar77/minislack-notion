@@ -42,6 +42,7 @@ const formSchema = z
       message: "Password must be at least 8 characters",
     }),
     confirmPassword: z.string(),
+    timezone: z.string().optional(),
     terms: z.boolean().refine((val) => val === true, {
       message: "You must agree to the terms and conditions",
     }),
@@ -61,6 +62,16 @@ export default function RegisterPage() {
   const emailParam = searchParams.get("email");
   const redirectParam = searchParams.get("redirect");
 
+  // Get user's timezone
+  const [userTimezone, setUserTimezone] = useState<string>(() => {
+    try {
+      return Intl.DateTimeFormat().resolvedOptions().timeZone;
+    } catch (error) {
+      console.error("Failed to get timezone:", error);
+      return "UTC";
+    }
+  });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -70,6 +81,7 @@ export default function RegisterPage() {
       email: emailParam || "",
       password: "",
       confirmPassword: "",
+      timezone: userTimezone,
       terms: false,
     },
   });

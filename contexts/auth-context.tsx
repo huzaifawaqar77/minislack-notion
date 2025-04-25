@@ -12,6 +12,7 @@ interface User {
   firstName?: string;
   lastName?: string;
   avatarUrl?: string;
+  timezone?: string;
 }
 
 interface AuthContextType {
@@ -33,6 +34,7 @@ interface AuthContextType {
       username: string;
       email: string;
       password: string;
+      timezone?: string;
     },
     redirectTo?: string
   ) => Promise<void>;
@@ -116,6 +118,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       username: string;
       email: string;
       password: string;
+      timezone?: string;
     },
     redirectTo?: string
   ) => {

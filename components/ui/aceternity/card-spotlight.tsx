@@ -34,7 +34,7 @@ export function CardSpotlight({
         ".spotlight"
       ) as HTMLElement;
       if (spotlight) {
-        spotlight.style.background = `radial-gradient(600px circle at ${mouseX.current}px ${mouseY.current}px, rgba(245, 158, 11, 0.15), transparent 40%)`;
+        spotlight.style.background = `radial-gradient(600px circle at ${mouseX.current}px ${mouseY.current}px, rgba(124, 58, 237, 0.15), transparent 40%)`;
       }
     };
 
@@ -56,7 +56,7 @@ export function CardSpotlight({
       <div className="spotlight absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
       {/* Border glow effect */}
-      <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 border border-accent/30 shadow-[0_0_15px_rgba(245,158,11,0.3)]" />
+      <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 border border-accent/30 shadow-[0_0_15px_rgba(124,58,237,0.3)]" />
 
       {children}
     </div>

@@ -8,10 +8,7 @@ interface SpotlightProps {
   children: React.ReactNode;
 }
 
-export function Spotlight({
-  children,
-  className = "",
-}: SpotlightProps) {
+export function Spotlight({ children, className = "" }: SpotlightProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mouseX = useRef(0);
   const mouseY = useRef(0);
@@ -24,15 +21,17 @@ export function Spotlight({
 
   useEffect(() => {
     if (!isMounted || !containerRef.current) return;
-    
+
     const handleMouseMove = (event: MouseEvent) => {
       const { left, top } = containerRef.current!.getBoundingClientRect();
       mouseX.current = event.clientX - left;
       mouseY.current = event.clientY - top;
-      
-      const spotlight = containerRef.current!.querySelector(".spotlight") as HTMLElement;
+
+      const spotlight = containerRef.current!.querySelector(
+        ".spotlight"
+      ) as HTMLElement;
       if (spotlight) {
-        spotlight.style.background = `radial-gradient(600px circle at ${mouseX.current}px ${mouseY.current}px, rgba(120, 255, 180, 0.15), transparent 40%)`;
+        spotlight.style.background = `radial-gradient(600px circle at ${mouseX.current}px ${mouseY.current}px, rgba(124, 58, 237, 0.15), transparent 40%)`;
       }
     };
 

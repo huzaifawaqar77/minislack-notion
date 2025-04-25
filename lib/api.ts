@@ -41,6 +41,7 @@ export const authApi = {
     username: string;
     email: string;
     password: string;
+    timezone?: string;
   }) => {
     try {
       // Format the request body to match the backend expectations
@@ -50,6 +51,7 @@ export const authApi = {
         password: userData.password,
         firstName: userData.firstName,
         lastName: userData.lastName,
+        timezone: userData.timezone,
       };
 
       const response = await api.post("/auth/register", requestData);
@@ -201,6 +203,7 @@ export const userApi = {
     lastName?: string;
     username?: string;
     email?: string;
+    timezone?: string;
   }) => {
     try {
       // Format the request body to match the backend expectations
@@ -209,6 +212,7 @@ export const userApi = {
         lastName: profileData.lastName,
         username: profileData.username,
         email: profileData.email,
+        timezone: profileData.timezone,
       };
 
       const response = await api.put("/auth/me", requestData);

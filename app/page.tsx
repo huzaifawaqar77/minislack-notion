@@ -58,7 +58,10 @@ export default function Home() {
               </Button>
             </Link>
             <Link href="/register">
-              <Button size="sm" className="bg-amber-500 hover:bg-amber-600">
+              <Button
+                size="sm"
+                className="bg-accent hover:bg-accent/90 text-accent-foreground"
+              >
                 Get Started
               </Button>
             </Link>
@@ -70,7 +73,7 @@ export default function Home() {
       <section className="w-full py-12 md:py-24 lg:py-32 bg-white dark:bg-zinc-950 border-b relative overflow-hidden">
         {/* Background Beams Effect */}
         <BackgroundBeams
-          beamColor="#f59e0b"
+          beamColor="#7c3aed" /* Purple-600 color */
           gridSize={12}
           beamCount={15}
           beamOpacity={0.6}
@@ -88,7 +91,7 @@ export default function Home() {
             {/* Left side - Text content */}
             <div className="flex flex-col justify-center space-y-4">
               <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                <span className="text-amber-500 dark:text-amber-400 block mb-2 drop-shadow-sm">
+                <span className="gradient-text block mb-2 drop-shadow-sm">
                   Modern Communication
                 </span>
                 <span className="text-zinc-800 dark:text-zinc-100">
@@ -103,16 +106,17 @@ export default function Home() {
                 <Link href="/register">
                   <Button
                     size="lg"
-                    className="bg-amber-500 hover:bg-amber-600 text-white shadow-lg shadow-amber-500/20 hover:shadow-amber-600/30 transition-all duration-300"
+                    className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg shadow-accent/20 hover:shadow-accent/30 transition-all duration-300 group"
                   >
                     Get Started
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </Link>
                 <Link href="/#features">
                   <Button
                     size="lg"
                     variant="outline"
-                    className="border-zinc-300 dark:border-zinc-700"
+                    className="border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all duration-300"
                   >
                     Learn More
                   </Button>
@@ -124,7 +128,7 @@ export default function Home() {
             <div className="flex items-center justify-center">
               <div className="w-full h-[400px] md:h-[450px] lg:h-[500px] relative">
                 {/* Add a subtle glow behind the MacBook */}
-                <div className="absolute inset-0 bg-amber-500/10 dark:bg-amber-500/20 blur-3xl rounded-full transform scale-90 translate-y-4"></div>
+                <div className="absolute inset-0 bg-accent/10 dark:bg-accent/20 blur-3xl rounded-full transform scale-90 translate-y-4"></div>
                 <MacBook
                   screenshotUrl="/dashboard-preview.png"
                   altText="MinSlack Dashboard"
@@ -142,7 +146,7 @@ export default function Home() {
         className="w-full py-12 md:py-24 lg:py-32 bg-muted/30 relative overflow-hidden flex items-center justify-center"
       >
         {/* Subtle background pattern */}
-        <div className="absolute inset-0 bg-[radial-gradient(#f59e0b_0.5px,transparent_0.5px)] [background-size:24px_24px] opacity-5"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(#7c3aed_0.5px,transparent_0.5px)] [background-size:24px_24px] opacity-5"></div>
 
         <div className="container px-4 md:px-6 relative z-10">
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
@@ -314,7 +318,7 @@ export default function Home() {
 
       {/* Authentication Steps Section */}
       <section className="w-full py-16 md:py-24 lg:py-32 bg-white dark:bg-zinc-950 border-b relative overflow-hidden flex items-center justify-center">
-        <div className="absolute inset-0 bg-[radial-gradient(#f59e0b_0.5px,transparent_0.5px)] [background-size:24px_24px] opacity-5"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(#7c3aed_0.5px,transparent_0.5px)] [background-size:24px_24px] opacity-5"></div>
 
         <div className="container px-4 md:px-6 relative z-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-12">
@@ -335,7 +339,7 @@ export default function Home() {
               <Link href="/register">
                 <Button
                   size="lg"
-                  className="bg-amber-500 hover:bg-amber-600 text-white font-medium shadow-lg shadow-amber-500/20 hover:shadow-amber-600/30 transition-all duration-300 group"
+                  className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium shadow-lg shadow-accent/20 hover:shadow-accent/30 transition-all duration-300 group"
                 >
                   Create Your Account
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -367,11 +371,11 @@ export default function Home() {
         <div className="container relative z-10 px-4 md:px-6 mx-auto">
           <div className="max-w-4xl mx-auto bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-xl border border-zinc-200/50 dark:border-zinc-800/50">
             <div className="flex flex-col items-center justify-center space-y-6 text-center">
-              <div className="inline-block px-4 py-1.5 mb-2 text-sm font-medium rounded-full bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700">
+              <div className="inline-block px-4 py-1.5 mb-2 text-sm font-medium rounded-full bg-accent/10 text-accent border border-accent/20">
                 <span className="flex items-center gap-1.5">
                   <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
                   </span>
                   Limited time offer: 50% off for teams
                 </span>
@@ -394,7 +398,7 @@ export default function Home() {
                 <Link href="/register" className="w-full sm:w-auto">
                   <Button
                     size="lg"
-                    className="w-full bg-amber-500 hover:bg-amber-600 text-white font-medium shadow-lg shadow-amber-500/20 hover:shadow-amber-600/30 transition-all duration-300 group"
+                    className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-medium shadow-lg shadow-accent/20 hover:shadow-accent/30 transition-all duration-300 group"
                   >
                     Start Free Trial
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -414,15 +418,15 @@ export default function Home() {
 
               <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-zinc-500 dark:text-zinc-400">
                 <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-amber-500" />
+                  <CheckCircle className="mr-2 h-4 w-4 text-accent" />
                   No credit card required
                 </div>
                 <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-amber-500" />
+                  <CheckCircle className="mr-2 h-4 w-4 text-accent" />
                   14-day free trial
                 </div>
                 <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-amber-500" />
+                  <CheckCircle className="mr-2 h-4 w-4 text-accent" />
                   Cancel anytime
                 </div>
               </div>
@@ -441,7 +445,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/#features"
-                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-accent dark:hover:text-accent"
                   >
                     Features
                   </Link>
@@ -449,7 +453,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/#pricing"
-                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-accent dark:hover:text-accent"
                   >
                     Pricing
                   </Link>
@@ -457,7 +461,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/integrations"
-                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-accent dark:hover:text-accent"
                   >
                     Integrations
                   </Link>
@@ -559,7 +563,7 @@ export default function Home() {
             <div className="flex space-x-4 mt-4 md:mt-0">
               <Link
                 href="#"
-                className="text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
+                className="text-zinc-600 dark:text-zinc-400 hover:text-accent dark:hover:text-accent"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -578,7 +582,7 @@ export default function Home() {
               </Link>
               <Link
                 href="#"
-                className="text-zinc-600 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"
+                className="text-zinc-600 dark:text-zinc-400 hover:text-accent dark:hover:text-accent"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
