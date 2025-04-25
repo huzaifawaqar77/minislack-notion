@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, Menu, MessageSquare, Search, User } from "lucide-react";
+import { Menu, MessageSquare, Search, User } from "lucide-react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
 import { GlobalOnlineUsers } from "@/components/global-online-users";
+import { NotificationBell } from "@/components/notification/notification-bell";
 import { useAuth } from "@/contexts/auth-context";
 import { Button } from "@/components/ui/button";
 import {
@@ -201,10 +202,7 @@ export function Header() {
                 <div className="hidden md:flex mr-2">
                   <GlobalOnlineUsers maxDisplay={3} />
                 </div>
-                <Button variant="outline" size="icon">
-                  <Bell className="h-4 w-4" />
-                  <span className="sr-only">Notifications</span>
-                </Button>
+                <NotificationBell />
                 <Button variant="outline" size="icon">
                   <MessageSquare className="h-4 w-4" />
                   <span className="sr-only">Messages</span>

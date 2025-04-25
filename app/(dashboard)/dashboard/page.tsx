@@ -34,6 +34,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { WorldMap } from "@/components/ui/world-map";
+import { NotificationList } from "@/components/notification/notification-list";
+import { NotificationSettings } from "@/components/notification/notification-settings";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -396,15 +398,24 @@ export default function DashboardPage() {
               <CardHeader>
                 <CardTitle className="text-purple-500">Notifications</CardTitle>
                 <CardDescription>
-                  Manage your notification settings.
+                  View and manage your notifications.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="h-[400px] w-full bg-[#252538] rounded-md flex items-center justify-center">
-                  <p className="text-muted-foreground">
-                    Notification settings will be displayed here
-                  </p>
-                </div>
+                <Tabs defaultValue="list">
+                  <TabsList className="mb-4">
+                    <TabsTrigger value="list">Notification List</TabsTrigger>
+                    <TabsTrigger value="settings">
+                      Notification Settings
+                    </TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="list">
+                    <NotificationList />
+                  </TabsContent>
+                  <TabsContent value="settings">
+                    <NotificationSettings />
+                  </TabsContent>
+                </Tabs>
               </CardContent>
             </Card>
           </TabsContent>

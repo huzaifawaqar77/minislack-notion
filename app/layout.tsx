@@ -9,6 +9,7 @@ import { WorkspaceProvider } from "@/contexts/workspace-context";
 import { ChannelProvider } from "@/contexts/channel-context";
 import { WebSocketProvider } from "@/contexts/websocket-context";
 import { DMProvider } from "@/contexts/dm-context";
+import { NotificationProvider } from "@/contexts/notification-context";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -51,10 +52,12 @@ export default function RootLayout({
             <WorkspaceProvider>
               <ChannelProvider>
                 <WebSocketProvider>
-                  <DMProvider>
-                    {children}
-                    <Toaster />
-                  </DMProvider>
+                  <NotificationProvider>
+                    <DMProvider>
+                      {children}
+                      <Toaster />
+                    </DMProvider>
+                  </NotificationProvider>
                 </WebSocketProvider>
               </ChannelProvider>
             </WorkspaceProvider>
