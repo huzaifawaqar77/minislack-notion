@@ -16,6 +16,7 @@ import {
   Settings,
   User,
   Users,
+  Kanban,
 } from "lucide-react";
 import { useWorkspace, Workspace } from "@/contexts/workspace-context";
 import { CreateWorkspaceDialog } from "@/components/workspace/create-workspace-dialog";
@@ -59,6 +60,11 @@ export function Sidebar({
       href: "/dashboard/channels",
       icon: FileText,
       title: "Channels",
+    },
+    {
+      href: "/projects",
+      icon: Kanban,
+      title: "Projects",
     },
     {
       href: "/dashboard/members",

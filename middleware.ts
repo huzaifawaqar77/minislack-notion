@@ -8,6 +8,7 @@ const protectedPaths = [
   "/messages",
   "/channels",
   "/workspaces",
+  "/projects",
 ];
 
 // Define which paths are auth paths (login, register, etc.)
