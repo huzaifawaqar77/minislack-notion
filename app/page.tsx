@@ -126,13 +126,14 @@ export default function Home() {
 
             {/* Right side - MacBook */}
             <div className="flex items-center justify-center">
-              <div className="w-full h-[400px] md:h-[450px] lg:h-[500px] relative">
-                {/* Add a subtle glow behind the MacBook */}
-                <div className="absolute inset-0 bg-accent/10 dark:bg-accent/20 blur-3xl rounded-full transform scale-90 translate-y-4"></div>
+              <div className="w-full h-[400px] md:h-[450px] lg:h-[500px] relative px-4 md:px-8">
+                {/* Subtle glow effect behind the MacBook */}
+                <div className="absolute inset-0 bg-accent/10 dark:bg-accent/15 blur-3xl rounded-full transform scale-90 translate-y-4"></div>
+
                 <MacBook
                   screenshotUrl="/dashboard-preview.png"
                   altText="MinSlack Dashboard"
-                  className="w-full h-full relative z-10 p-4"
+                  className="w-full h-full relative z-10"
                 />
               </div>
             </div>

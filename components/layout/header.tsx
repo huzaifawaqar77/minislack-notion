@@ -43,11 +43,11 @@ export function Header() {
   const { user, isAuthenticated, logout } = useAuth();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
-        <div className="mr-4 hidden md:flex">
-          <Link href="/" className="mx-6 flex items-center space-x-2">
-            <span className="hidden font-bold sm:inline-block text-accent">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
+      <div className="flex h-16 items-center px-4 md:px-6 lg:px-8">
+        <div className="mr-6 hidden md:flex">
+          <Link href="/" className="mr-8 flex items-center space-x-2">
+            <span className="hidden font-bold text-lg sm:inline-block text-accent">
               UIFlexer
             </span>
           </Link>
@@ -130,7 +130,11 @@ export function Header() {
         </div>
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="mr-2 md:hidden">
+            <Button
+              variant="outline"
+              size="icon"
+              className="mr-2 md:hidden border-border/40 hover:bg-accent/10 hover:text-accent"
+            >
               <Menu className="h-5 w-5" />
               <span className="sr-only">Toggle Menu</span>
             </Button>
@@ -189,7 +193,11 @@ export function Header() {
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
           <div className="w-full flex-1 md:w-auto md:flex-none">
             {isAuthenticated && (
-              <Button variant="outline" size="icon" className="mr-2">
+              <Button
+                variant="outline"
+                size="icon"
+                className="mr-2 border-border/40 hover:bg-accent/10 hover:text-accent"
+              >
                 <Search className="h-4 w-4" />
                 <span className="sr-only">Search</span>
               </Button>
@@ -203,7 +211,11 @@ export function Header() {
                   <GlobalOnlineUsers maxDisplay={3} />
                 </div>
                 <NotificationBell />
-                <Button variant="outline" size="icon">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="border-border/40 hover:bg-accent/10 hover:text-accent"
+                >
                   <MessageSquare className="h-4 w-4" />
                   <span className="sr-only">Messages</span>
                 </Button>
@@ -211,9 +223,9 @@ export function Header() {
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="relative h-8 w-8 rounded-full"
+                      className="relative h-9 w-9 rounded-full hover:bg-accent/10"
                     >
-                      <Avatar className="h-8 w-8">
+                      <Avatar className="h-9 w-9 border border-border/40">
                         <AvatarImage
                           src={
                             process.env.NEXT_PUBLIC_API_URL +
@@ -224,7 +236,7 @@ export function Header() {
                           className="h-full w-full object-cover"
                           alt={user?.username || "User"}
                         />
-                        <AvatarFallback>
+                        <AvatarFallback className="bg-accent/10 text-accent font-medium">
                           {user?.firstName?.charAt(0) ||
                             user?.username?.charAt(0) ||
                             "U"}
@@ -270,12 +282,21 @@ export function Header() {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" size="sm">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="hover:bg-accent/10 hover:text-accent"
+                  >
                     Log in
                   </Button>
                 </Link>
                 <Link href="/register">
-                  <Button size="sm">Sign up</Button>
+                  <Button
+                    size="sm"
+                    className="bg-accent hover:bg-accent/90 text-white"
+                  >
+                    Sign up
+                  </Button>
                 </Link>
               </>
             )}

@@ -94,6 +94,9 @@ module.exports = {
         shimmer: "shimmer 2s infinite linear",
         "gradient-x": "gradient-x 15s ease infinite",
       },
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

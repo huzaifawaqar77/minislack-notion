@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useProject } from "@/contexts/project-context";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,7 +22,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatDistanceToNow } from "date-fns";
 import {
   PlusCircle,
   MoreVertical,
@@ -37,14 +36,12 @@ import {
 import { CreateTaskDialog } from "./create-task-dialog";
 import { TaskDetailsDialog } from "./task-details-dialog";
 import { Task } from "@/lib/api/taskApi";
-import { useRouter } from "next/navigation";
 
 interface TaskBoardProps {
   projectId: string;
 }
 
 export function TaskBoard({ projectId }: TaskBoardProps) {
-  const router = useRouter();
   const {
     tasks,
     loading,
@@ -159,30 +156,75 @@ export function TaskBoard({ projectId }: TaskBoardProps) {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Tasks</h2>
-        <Button onClick={() => setIsCreateDialogOpen(true)}>
-          <PlusCircle className="mr-2 h-4 w-4" /> New Task
-        </Button>
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h2 className="text-2xl font-bold">Tasks</h2>
+          <p className="text-muted-foreground">Manage your project tasks</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg
+                className="w-4 h-4 text-muted-foreground"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                />
+              </svg>
+            </div>
+            <input
+              type="search"
+              className="block w-full p-2 pl-10 text-sm border border-border/40 rounded-md bg-background"
+              placeholder="Search tasks..."
+            />
+          </div>
+          <Button
+            onClick={() => setIsCreateDialogOpen(true)}
+            className="bg-accent hover:bg-accent/90"
+          >
+            <PlusCircle className="mr-2 h-4 w-4" /> New Task
+          </Button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {Object.entries(statusLabels).map(([status, { label, icon }]) => (
-          <div key={status} className="space-y-2">
-            <div className="flex items-center gap-2 font-medium text-sm">
-              {icon}
-              <h3>{label}</h3>
-              <Badge variant="outline" className="ml-auto">
-                {tasksByStatus[status]?.length || 0}
-              </Badge>
+          <div key={status} className="space-y-3">
+            <div className="flex items-center gap-2 font-medium">
+              <div className="flex items-center gap-2 bg-muted/30 px-3 py-2 rounded-md">
+                {icon}
+                <h3 className="text-sm font-semibold">{label}</h3>
+                <Badge
+                  variant="secondary"
+                  className="ml-2 bg-accent/10 text-accent hover:bg-accent/20"
+                >
+                  {tasksByStatus[status]?.length || 0}
+                </Badge>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="ml-auto h-8 w-8"
+                onClick={() => setIsCreateDialogOpen(true)}
+              >
+                <PlusCircle className="h-4 w-4" />
+              </Button>
             </div>
-            <div className="bg-slate-50 p-2 rounded-lg min-h-[200px]">
+            <div className="bg-muted/10 p-3 rounded-lg min-h-[400px] border border-border/40">
               {tasksByStatus[status]?.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-32 text-center text-sm text-muted-foreground">
                   <p>No tasks in this column</p>
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     size="sm"
                     className="mt-2"
                     onClick={() => setIsCreateDialogOpen(true)}
@@ -191,14 +233,25 @@ export function TaskBoard({ projectId }: TaskBoardProps) {
                   </Button>
                 </div>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {tasksByStatus[status]?.map((task) => (
                     <Card
                       key={task.id}
-                      className="cursor-pointer hover:shadow-md transition-shadow"
+                      className="cursor-pointer hover:shadow-md transition-shadow border border-border/40 overflow-hidden"
                       onClick={() => openTaskDetails(task)}
                     >
-                      <CardHeader className="p-3 pb-0">
+                      <div
+                        className={`h-1 w-full ${
+                          task.priority === "urgent"
+                            ? "bg-red-500"
+                            : task.priority === "high"
+                            ? "bg-orange-500"
+                            : task.priority === "medium"
+                            ? "bg-blue-500"
+                            : "bg-slate-500"
+                        }`}
+                      ></div>
+                      <CardHeader className="p-3 pb-2">
                         <div className="flex justify-between items-start">
                           <CardTitle className="text-sm font-medium">
                             {task.title}
@@ -263,21 +316,26 @@ export function TaskBoard({ projectId }: TaskBoardProps) {
                           </DropdownMenu>
                         </div>
                       </CardHeader>
-                      <CardContent className="p-3 pt-1">
+                      <CardContent className="p-3 pt-0">
                         {task.description && (
-                          <CardDescription className="text-xs line-clamp-2">
+                          <CardDescription className="text-xs line-clamp-2 mt-1">
                             {task.description}
                           </CardDescription>
                         )}
                       </CardContent>
                       <CardFooter className="p-3 pt-0 flex justify-between items-center text-xs">
-                        <div className="flex gap-1">
+                        <div className="flex gap-1 flex-wrap">
                           {task.priority && (
                             <Badge
-                              className={
-                                priorityLabels[task.priority]?.color ||
-                                "bg-slate-100"
-                              }
+                              className={`${
+                                task.priority === "urgent"
+                                  ? "bg-red-500/10 text-red-500"
+                                  : task.priority === "high"
+                                  ? "bg-orange-500/10 text-orange-500"
+                                  : task.priority === "medium"
+                                  ? "bg-blue-500/10 text-blue-500"
+                                  : "bg-slate-500/10 text-slate-500"
+                              }`}
                               variant="secondary"
                             >
                               {priorityLabels[task.priority]?.label ||
@@ -285,7 +343,10 @@ export function TaskBoard({ projectId }: TaskBoardProps) {
                             </Badge>
                           )}
                           {task.due_date && (
-                            <Badge variant="outline" className="gap-1">
+                            <Badge
+                              variant="outline"
+                              className="gap-1 border-border/40"
+                            >
                               <Calendar className="h-3 w-3" />
                               {new Date(task.due_date).toLocaleDateString()}
                             </Badge>
@@ -294,7 +355,7 @@ export function TaskBoard({ projectId }: TaskBoardProps) {
                         {task.assigned_to && (
                           <Avatar className="h-6 w-6">
                             <AvatarImage src="" alt="Assignee" />
-                            <AvatarFallback className="text-xs">
+                            <AvatarFallback className="text-xs bg-accent/20 text-accent">
                               {task.assigned_to.substring(0, 2).toUpperCase()}
                             </AvatarFallback>
                           </Avatar>
