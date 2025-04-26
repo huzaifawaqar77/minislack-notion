@@ -93,6 +93,8 @@ module.exports = {
         "slide-in": "slide-in 0.5s ease-out forwards",
         shimmer: "shimmer 2s infinite linear",
         "gradient-x": "gradient-x 15s ease infinite",
+        "gentle-float": "gentle-float 6s ease-in-out infinite",
+        "shadow-pulse": "shadow-pulse 6s ease-in-out infinite",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

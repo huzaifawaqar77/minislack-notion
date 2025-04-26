@@ -127,8 +127,11 @@ export default function Home() {
             {/* Right side - MacBook */}
             <div className="flex items-center justify-center">
               <div className="w-full h-[400px] md:h-[450px] lg:h-[500px] relative px-4 md:px-8">
-                {/* Subtle glow effect behind the MacBook */}
-                <div className="absolute inset-0 bg-accent/10 dark:bg-accent/15 blur-3xl rounded-full transform scale-90 translate-y-4"></div>
+                {/* Enhanced glow effect behind the MacBook */}
+                <div className="absolute inset-0 bg-accent/20 dark:bg-accent/30 blur-3xl rounded-full transform scale-95 translate-y-4"></div>
+
+                {/* Secondary glow for depth */}
+                <div className="absolute inset-[10%] bg-accent/15 dark:bg-accent/20 blur-2xl rounded-full transform scale-90"></div>
 
                 <MacBook
                   screenshotUrl="/dashboard-preview.png"

@@ -19,12 +19,12 @@ export function MacBook({
     <div className={cn("relative w-full h-full", className)}>
       <div className="relative w-full h-full flex items-center justify-center">
         {/* MacBook Pro Container */}
-        <div className="relative w-full max-w-4xl">
+        <div className="relative w-full max-w-4xl animate-gentle-float">
           {/* MacBook Pro Mockup */}
           <div className="relative w-full">
             {/* Main Body with subtle perspective */}
             <div
-              className="relative w-full aspect-[16/10] rounded-[20px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.2)]"
+              className="relative w-full aspect-[16/10] rounded-[20px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
               style={{
                 perspective: "1000px",
                 transformStyle: "preserve-3d",
@@ -75,8 +75,8 @@ export function MacBook({
               ></div>
             </div>
 
-            {/* Subtle Shadow */}
-            <div className="absolute -bottom-6 left-[10%] right-[10%] h-4 bg-black/15 blur-xl rounded-full"></div>
+            {/* Animated Shadow */}
+            <div className="absolute -bottom-6 left-[10%] right-[10%] h-4 bg-black/25 blur-xl rounded-full animate-shadow-pulse"></div>
           </div>
         </div>
       </div>
