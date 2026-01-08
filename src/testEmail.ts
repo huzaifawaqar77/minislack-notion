@@ -5,6 +5,7 @@ dotenv.config({
 
 import nodemailer from "nodemailer";
 import { emailConfig, emailFrom, emailFromName } from "./config/environment";
+console.log("hello")
 
 async function testEmailConnection() {
   console.log("Testing email connection with the following configuration:");
